@@ -1002,6 +1002,31 @@
 
     const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poriad.webp', 'photos/super CP/zwyz1.webp', 'photos/小食杂记/mixue.webp', 'photos/小食杂记/蛙.webp', 'photos/漫/kun.webp', 'photos/漫/me.webp', 'photos/漫/wei.webp', 'photos/漫/ya.webp', 'photos/漫/zhu.webp', 'photos/🎓/毕业照1.webp', 'photos/🎓/毕业照2.webp', 'photos/🎓/毕业照3.webp', 'photos/🎓/毕业照4.webp', 'photos/🎓/毕业照5.webp', 'photos/🎓/毕业照6.webp', 'photos/🎓/毕业照7.webp', 'photos/🎓/毕业照8.webp', 'photos/🎓/毕业照9.webp', 'photos/🎓hb/1.webp'];
 
+    // ★ 每张照片的卡片名字 & 点击后故事文字（按需修改）
+    const CARD_INFO = {
+      '2door.webp':          { meta: '2door',         story: '门内门外，两个世界。' },
+      'BD/kun.webp':         { meta: 'BD·坤',          story: '那些一起肝过的夜晚。' },
+      'poriad.webp':         { meta: 'Poriad',         story: '时光的碎片，每一帧都是独家记忆。' },
+      'super CP/zwyz1.webp': { meta: 'ZWYZ',           story: '属于ZWYZ的独家记忆。世界喧闹，但这一帧里，时间仿佛静止。' },
+      '小食杂记/mixue.webp':  { meta: '蜜雪冰城',        story: '甜蜜的小食光，每一口都是回忆。' },
+      '小食杂记/蛙.webp':     { meta: '蛙',             story: '时光的碎片，每一帧都是独家记忆。' },
+      '漫/kun.webp':         { meta: '漫·坤',          story: '二次元的我们。' },
+      '漫/me.webp':          { meta: '漫·我',          story: '画笔下的另一个自己。' },
+      '漫/wei.webp':         { meta: '漫·薇',          story: '时光的碎片，每一帧都是独家记忆。' },
+      '漫/ya.webp':          { meta: '漫·雅',          story: '时光的碎片，每一帧都是独家记忆。' },
+      '漫/zhu.webp':         { meta: '漫·竹',          story: '时光的碎片，每一帧都是独家记忆。' },
+      '🎓/毕业照1.webp':      { meta: '毕业照·壹',       story: '学士服下的笑脸，是四年最好的答卷。' },
+      '🎓/毕业照2.webp':      { meta: '毕业照·贰',       story: '我们曾在操场上奔跑，如今各自奔向远方。' },
+      '🎓/毕业照3.webp':      { meta: '毕业照·叁',       story: '那一天阳光很好，我们也很好。' },
+      '🎓/毕业照4.webp':      { meta: '毕业照·肆',       story: '照片会泛黄，但记忆永远鲜活。' },
+      '🎓/毕业照5.webp':      { meta: '毕业照·伍',       story: '青春不散场，只是换了一种方式陪伴。' },
+      '🎓/毕业照6.webp':      { meta: '毕业照·陆',       story: '图书馆靠窗的座位，见证了无数次期末周的死磕。' },
+      '🎓/毕业照7.webp':      { meta: '毕业照·柒',       story: '你总说毕业遥遥无期，转眼就各奔东西。' },
+      '🎓/毕业照8.webp':      { meta: '毕业照·捌',       story: '夏天的风会记得，我们来过。' },
+      '🎓/毕业照9.webp':      { meta: '毕业照·玖',       story: '时光的碎片，每一帧都是独家记忆。' },
+      '🎓hb/1.webp':         { meta: '毕业快乐',        story: '愿此去前程似锦，再相逢依旧如故。' },
+    };
+
 
 
     const STATE = { PARTICLE: 'particle', WALL: 'wall', RING: 'ring' };
@@ -1831,14 +1856,15 @@
         card.style.transform = `rotate(${rot}deg)`;
         card.style.zIndex = zIdx;
         const fileName = url.split('/').pop();
+        const info = CARD_INFO[url.replace('photos/', '')] || { meta: fileName.replace(/\.[^.]+$/, ''), story: '时光的碎片，每一帧都是独家记忆。' };
         const rotate90 = ROTATE_90_PHOTOS.has(fileName) || ROTATE_90_PHOTOS.has(url);
         card.innerHTML = `<div class="card-border"></div>
           <div class="card-photo"><img src="${url}" loading="lazy"${rotate90 ? ' class="is-portrait"' : ''} /></div>
-          <div class="card-photo-meta">${url.split('/').pop().replace(/\.[^.]+$/, '')}</div>`;
+          <div class="card-photo-meta">${info.meta}</div>`;
         card.addEventListener('click', (e) => {
           e.stopPropagation();
           const origRel = url.replace('photos/', '');
-          openDCFullscreen(card, { photo: url, meta: url.split('/').pop(), story: '时光的碎片，每一帧都是独家记忆。', original: PHOTO_ORIGINALS[origRel] || '' });
+          openDCFullscreen(card, { photo: url, meta: info.meta, story: info.story, original: PHOTO_ORIGINALS[origRel] || '' });
         });
         card.addEventListener('mouseenter', () => {
           if (!dcPage.classList.contains('is-focusing')) { card.classList.add('is-bloom'); if (dcVignette) dcVignette.style.opacity = '0.4'; }
