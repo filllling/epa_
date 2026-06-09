@@ -899,7 +899,7 @@
   </div>
 
   <div id="main-title">Miracle Heart</div>
-  <button id="toggle-btn">⚙️</button>
+  <button id="toggle-btn">☰</button>
 
   <div id="canvas-wrapper">
     <div id="canvas-container"></div>
@@ -921,24 +921,17 @@
   </div>
 
   <div id="ui-panel" class="hidden">
-    <div class="ctrl-section">
-      <h3>📝 表白文字自定义</h3>
-      <div class="ctrl-group"><label>标题内容</label><input type="text" id="custom-text" value="Miracle Heart"></div>
 
-    </div>
     <div class="ctrl-section">
-      <h3>🎨 场景设置</h3>
-    </div>
-    <div class="ctrl-section">
-      <h3>🖱️ 场景切换</h3>
-      <div class="ctrl-group"><button id="btn-mode-particle" class="ctrl-btn">🌟 星云粒子模式</button></div>
-      <div class="ctrl-group"><button id="btn-mode-wall" class="ctrl-btn">🖼️ 照片墙</button></div>
-      <div class="ctrl-group"><button id="btn-mode-ring" class="ctrl-btn">💫 环形画廊</button></div>
+      <h3>场景切换</h3>
+      <div class="ctrl-group"><button id="btn-mode-particle" class="ctrl-btn">星云粒子</button></div>
+      <div class="ctrl-group"><button id="btn-mode-wall" class="ctrl-btn">照片墙</button></div>
+      <div class="ctrl-group"><button id="btn-mode-ring" class="ctrl-btn">环形画廊</button></div>
     </div>
     <div class="ctrl-section">
     </div>
     <div class="ctrl-section">
-      <h3>🎛️ 特效微调</h3>
+      <h3>特效</h3>
       <div class="ctrl-group"><label>粒子散聚 <span id="val-blend">100</span>%</label><input type="range" id="blend-factor"
           min="0" max="100" step="1" value="100"></div>
       <div class="ctrl-group"><label>自转速度 <span id="val-rot">0.002</span></label><input type="range" id="rot-speed"
@@ -952,9 +945,9 @@
 
   <div id="qr-modal">
     <div id="qr-modal-box">
-      <h3>✨ Miracle Heart</h3>
+      <h3>Miracle Heart</h3>
       <canvas id="qr-canvas"></canvas>
-      <p>📱 扫一扫，在手机上打开这份浪漫</p>
+      <p>扫一扫，在手机上打开</p>
       <div id="qr-url"></div>
       <button id="qr-close">关 闭</button>
     </div>
@@ -1024,7 +1017,7 @@
       document.documentElement.style.setProperty('--app-vw', width + 'px');
       document.documentElement.style.setProperty('--app-vh', height + 'px');
     }
-    let currentState = STATE.PARTICLE;
+    let currentState = STATE.RING;
 
     // ═══ 状态持久化：刷新后恢复上次浏览位置 ═══
     function saveAppState() {
@@ -1668,9 +1661,9 @@
 
     function triggerPhotoFlow() {
       if (photoUrls.length === 0) return;
-      if (currentState === STATE.PARTICLE) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { }); } catch (e) { } }
-      else if (currentState === STATE.WALL) { currentState = STATE.RING; renderRingView(); saveAppState(); try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape'); }).catch(() => { }); } catch (e) { } }
-      else if (currentState === STATE.RING) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { }); } catch (e) { } }
+      if (currentState === STATE.RING) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { }); } catch (e) { } }
+      else if (currentState === STATE.WALL) { currentState = STATE.PARTICLE; hideDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } }
+      else if (currentState === STATE.PARTICLE) { currentState = STATE.RING; renderRingView(); saveAppState(); try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape'); }).catch(() => { }); } catch (e) { } }
       updateHTMLOverlay();
     }
 
@@ -1748,7 +1741,17 @@
       dcPage.addEventListener('click', (e) => {
         if (e.target.closest('.photo-card') || e.target.closest('.fullscreen-overlay')) return;
         const now = Date.now();
-        if (now - dcLastTap < 300) hideDragCanvas();
+        if (now - dcLastTap < 300) {
+          if (currentState === STATE.RING) {
+            // RING 下双击 → 照片墙
+            currentState = STATE.WALL;
+            showDragCanvas();
+            saveAppState();
+            updateHTMLOverlay();
+          } else {
+            hideDragCanvas();
+          }
+        }
         dcLastTap = now;
       });
     }
@@ -2270,7 +2273,7 @@
 
 
 
-      document.getElementById('custom-text').addEventListener('input', (e) => titleEl.innerText = e.target.value);
+
 
       // ★ 粒子散聚滑块
       document.getElementById('blend-factor').addEventListener('input', (e) => {
@@ -2378,7 +2381,12 @@
           }
         }
       }
-      autoLoadPhotos();
+      autoLoadPhotos().then(() => {
+        if (currentState === STATE.RING) {
+          renderRingView();
+          updateHTMLOverlay();
+        }
+      });
     }
 
     // === 页面卸载时资源清理 ===
