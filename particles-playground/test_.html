@@ -1004,27 +1004,28 @@
 
     // ★ 每张照片的卡片名字 & 点击后故事文字（按需修改）
     const CARD_INFO = {
-      '2door.webp':          { meta: '2door',         story: '门内门外，两个世界。' },
-      'BD/kun.webp':         { meta: 'BD·坤',          story: '那些一起肝过的夜晚。' },
-      'poriad.webp':         { meta: 'Poriad',         story: '时光的碎片，每一帧都是独家记忆。' },
-      'super CP/zwyz1.webp': { meta: 'ZWYZ',           story: '属于ZWYZ的独家记忆。世界喧闹，但这一帧里，时间仿佛静止。' },
-      '小食杂记/mixue.webp':  { meta: '蜜雪冰城',        story: '甜蜜的小食光，每一口都是回忆。' },
-      '小食杂记/蛙.webp':     { meta: '蛙',             story: '时光的碎片，每一帧都是独家记忆。' },
-      '漫/kun.webp':         { meta: '漫·坤',          story: '二次元的我们。' },
-      '漫/me.webp':          { meta: '漫·我',          story: '画笔下的另一个自己。' },
-      '漫/wei.webp':         { meta: '漫·薇',          story: '时光的碎片，每一帧都是独家记忆。' },
-      '漫/ya.webp':          { meta: '漫·雅',          story: '时光的碎片，每一帧都是独家记忆。' },
-      '漫/zhu.webp':         { meta: '漫·竹',          story: '时光的碎片，每一帧都是独家记忆。' },
-      '🎓/毕业照1.webp':      { meta: '毕业照·壹',       story: '学士服下的笑脸，是四年最好的答卷。' },
-      '🎓/毕业照2.webp':      { meta: '毕业照·贰',       story: '我们曾在操场上奔跑，如今各自奔向远方。' },
-      '🎓/毕业照3.webp':      { meta: '毕业照·叁',       story: '那一天阳光很好，我们也很好。' },
-      '🎓/毕业照4.webp':      { meta: '毕业照·肆',       story: '照片会泛黄，但记忆永远鲜活。' },
-      '🎓/毕业照5.webp':      { meta: '毕业照·伍',       story: '青春不散场，只是换了一种方式陪伴。' },
-      '🎓/毕业照6.webp':      { meta: '毕业照·陆',       story: '图书馆靠窗的座位，见证了无数次期末周的死磕。' },
-      '🎓/毕业照7.webp':      { meta: '毕业照·柒',       story: '你总说毕业遥遥无期，转眼就各奔东西。' },
-      '🎓/毕业照8.webp':      { meta: '毕业照·捌',       story: '夏天的风会记得，我们来过。' },
-      '🎓/毕业照9.webp':      { meta: '毕业照·玖',       story: '时光的碎片，每一帧都是独家记忆。' },
-      '🎓hb/1.webp':         { meta: '毕业快乐',        story: '愿此去前程似锦，再相逢依旧如故。' },
+      '2door.webp': { meta: '2026 元旦 2号门', story: '通宵的麻将夜，一起去南滨路的路上路过二号门' },
+      'BD/kun.webp': { meta: '2026/4/14 刘明生日 东北胖子饭馆', story: '2026年春季学期五个人吃的第一顿饭，几天后杨竹子为开启了幸福的海南之旅，游导这个时候投身于毕晚建设（47天后毕晚完美谢幕，游导完成心愿' },
+      'poriad.webp': { meta: '2026/6/2 yhy生日 拍立得合影 ', story: '1！2！3！4！5！' },
+      'super CP/zwyz1.webp': { meta: '2026/6/2 ZWYZ', story: '超级CP在yhy生日的超级合影' },
+      '小食杂记/mixue.webp': { meta: '2026 元旦 重庆蜜雪冰城总店', story: '问：“蜜瓜、抹茶、葡萄”，第四个口味是什么？。' },
+      '小食杂记/蛙.webp': { meta: '2026/4/8 约饭', story: '食🐸记 & 游姐拍立得的第一次出征' },
+      '漫/kun.webp': { meta: '张开怀抱', story: '毕业快乐！坤。' },
+      '漫/me.webp': { meta: '游姐美照', story: '非常6个1' },
+      '漫/wei.webp': { meta: '谁是凶手', story: 'yhy' },
+      '漫/ya.webp': { meta: '若只是同龄人', story: '我原本没想降维打击' },
+      '漫/zhu.webp': { meta: '🎓', story: '🎓' },
+
+      '🎓/毕业照1.webp': { meta: '2026/5/23 8教', story: '独家记忆·壹' },
+      '🎓/毕业照2.webp': { meta: '2026/5/23 8教', story: '独家记忆·贰' },
+      '🎓/毕业照3.webp': { meta: '2026/5/23 8教', story: '独家记忆·叁' },
+      '🎓/毕业照4.webp': { meta: '2026/5/23 8教', story: '独家记忆·肆' },
+      '🎓/毕业照5.webp': { meta: '2026/5/23 8教', story: '独家记忆·伍' },
+      '🎓/毕业照6.webp': { meta: '2026/5/23 8教', story: '独家记忆·陆' },
+      '🎓/毕业照7.webp': { meta: '2026/5/23 二运', story: '独家记忆·柒' },
+      '🎓/毕业照8.webp': { meta: '2026/5/23 二运', story: '独家记忆·捌' },
+      '🎓/毕业照9.webp': { meta: '2026/5/23 二运', story: '独家记忆·玖' },
+      '🎓hb/1.webp': { meta: '氛围版', story: 'emm, TO BE CONTINUE' },
     };
 
 
@@ -2284,10 +2285,10 @@
           try {
             if (!document.fullscreenElement) {
               document.documentElement.requestFullscreen().then(() => {
-                if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {});
-              }).catch(() => {});
+                if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => { });
+              }).catch(() => { });
             }
-          } catch (e) {}
+          } catch (e) { }
         }
         const now = Date.now();
         if (now - ringLastTap < 350) {
@@ -2295,7 +2296,7 @@
           showDragCanvas();
           updateHTMLOverlay();
           saveAppState();
-          try { screen.orientation.unlock(); } catch (e) {}
+          try { screen.orientation.unlock(); } catch (e) { }
         }
         ringLastTap = now;
       });
