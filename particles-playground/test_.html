@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Our Miracle Heart - Silk Confession Edition</title>
   <link
     href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Great+Vibes&family=Ma+Shan+Zheng&family=Long+Cang&family=Noto+Sans+SC:wght@700&display=swap"
@@ -12,11 +13,9 @@
     body {
       margin: 0;
       overflow: hidden;
+      touch-action: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      height: 100dvh;
       user-select: none;
       transition: background 1s ease;
     }
@@ -43,8 +42,10 @@
     /* === 首页启动画面 — EPA 极简暗黑风格 === */
     #start-screen {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: #0a0a0a;
       z-index: 200;
       display: none;
@@ -52,11 +53,12 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       transition: opacity 1.2s ease;
     }
+
     #start-screen::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 40%, rgba(250,198,247,0.04) 0%, transparent 60%);
+      background: radial-gradient(circle at 50% 40%, rgba(250, 198, 247, 0.04) 0%, transparent 60%);
       pointer-events: none;
     }
 
@@ -68,7 +70,10 @@
       letter-spacing: -0.02em;
       margin-bottom: 8px;
     }
-    #start-title span { color: #fac6f7; }
+
+    #start-title span {
+      color: #fac6f7;
+    }
 
     #start-sub {
       color: #666;
@@ -78,13 +83,15 @@
       margin-bottom: 48px;
     }
 
-    #start-hint { display: none; }
+    #start-hint {
+      display: none;
+    }
 
     #btn-start {
       padding: 14px 48px;
       font-size: 14px;
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 2px;
       color: #999;
       cursor: pointer;
@@ -93,6 +100,7 @@
       transition: all 0.4s ease;
       font-family: 'Inter', -apple-system, sans-serif;
     }
+
     #btn-start:hover {
       border-color: #fac6f7;
       color: #fac6f7;
@@ -108,17 +116,21 @@
       filter: grayscale(1);
       transition: opacity 0.6s, filter 0.6s;
     }
+
     #start-cover:hover {
       opacity: 0.7;
       filter: grayscale(0);
     }
+
     #start-dots {
       display: flex;
       gap: 6px;
       margin-top: 40px;
     }
+
     #start-dots span {
-      width: 4px; height: 4px;
+      width: 4px;
+      height: 4px;
       border-radius: 50%;
       background: #333;
     }
@@ -230,43 +242,76 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+      perspective: 3000px;
+      perspective-origin: 50% 50%;
     }
 
-    #ring-view {
+    #ring-stage {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 0;
       height: 0;
-      transform-style: flat;
-    }
-
-    .ring-img {
-      position: absolute;
-      width: 190px;
-      height: 142px;
-      object-fit: cover;
-      border: 3px solid rgba(255, 255, 255, 0.85);
-      border-radius: 14px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
-      margin-left: -95px;
-      margin-top: -71px;
-      transition: border-color 0.4s, box-shadow 0.4s, filter 0.6s ease, transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1);
-      filter: brightness(1) blur(0px);
+      transform-style: preserve-3d;
       will-change: transform;
     }
 
-    .ring-img.is-background {
-      filter: brightness(0.4) blur(2px);
-      border-color: rgba(255, 182, 193, 0.3);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    .ring-card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-style: preserve-3d;
+      will-change: filter;
+      padding: 3px 3px 10px 3px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 0.5px solid rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 6px rgba(255, 182, 193, 0.02);
+      transition: box-shadow 1.2s ease;
+      box-sizing: border-box;
     }
 
-    .ring-img:hover {
-      border-color: #ffb6c1;
-      box-shadow: 0 20px 60px rgba(255, 182, 193, 0.6);
-      filter: brightness(1.2) blur(0px) !important;
-      scale: 1.1;
+    .ring-card.is-front {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 12px rgba(255, 182, 193, 0.06);
+    }
+
+    .ring-card-inner {
+      width: 72px;
+      height: 96px;
+      overflow: hidden;
+      border-radius: 1.5px;
+      background: #0a0a0a;
+      backface-visibility: hidden;
+    }
+
+    .ring-card-inner img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.92;
+    }
+
+    .ring-caption {
+      position: absolute;
+      bottom: 3px;
+      left: 8px;
+      right: 8px;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 6px;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.30);
+      opacity: 0;
+      transition: opacity 1.6s ease;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .ring-card.is-front .ring-caption {
+      opacity: 1;
     }
 
     .show-zoom #html-overlay {
@@ -387,7 +432,7 @@
       padding: 18px;
       border-radius: 14px;
       color: #ddd;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 0.5px solid rgba(255, 255, 255, 0.05);
       z-index: 100;
       transition: transform 0.4s ease, opacity 0.4s;
       box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
@@ -414,7 +459,7 @@
       justify-content: space-between;
       font-size: 11px;
       color: #aaa;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .ctrl-group h3 {
@@ -476,11 +521,11 @@
     }
 
     #canvas-wrapper {
-      position: relative;
+      position: fixed;
+      inset: 0;
       background: transparent;
       overflow: hidden;
-      width: 100vw;
-      height: 100vh;
+      touch-action: none;
       will-change: transform;
     }
 
@@ -576,118 +621,267 @@
 
     /* ═══ 拖拽相册画布 ═══ */
     .drag-canvas-page {
-      position: fixed; inset: 0; z-index: 100; background: #000;
-      display: none; overflow: hidden; overscroll-behavior: none;
-      touch-action: pan-x pan-y; cursor: grab;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #000;
+      display: none;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: pan-x pan-y;
+      cursor: grab;
     }
-    .drag-canvas-page:active { cursor: grabbing; }
+
+    .drag-canvas-page:active {
+      cursor: grabbing;
+    }
+
     .dc-particles {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
+
     .drag-canvas {
-      position: absolute; left: 0; top: 0; z-index: 1;
-      will-change: transform; user-select: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1;
+      will-change: transform;
+      user-select: none;
       transform-origin: 0 0;
     }
+
     .photo-card {
-      position: absolute; width: 260px; z-index: 1;
+      position: absolute;
+      width: 260px;
+      z-index: 1;
       will-change: transform;
-      background: rgba(10,10,10,0.85); border-radius: 8px;
-      padding: 10px; cursor: pointer; transition: z-index 0.1s;
+      background: rgba(10, 10, 10, 0.85);
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: z-index 0.1s;
     }
+
     .card-border {
-      position: absolute; inset: 0; border-radius: 8px; padding: 1px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.06) 100%);
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(255, 255, 255, 0.06) 100%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
-    .card-photo { width: 100%; overflow: hidden; border-radius: 4px; background: #111; }
-    .card-photo img { width: 100%; height: auto; display: block; }
-    .card-photo img.is-portrait { width: auto; height: 170px; transform: rotate(90deg); transform-origin: center center; }
+
+    .card-photo {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #111;
+    }
+
+    .card-photo img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .card-photo img.is-portrait {
+      width: auto;
+      height: 170px;
+      transform: rotate(90deg);
+      transform-origin: center center;
+    }
+
     .card-photo-meta {
-      margin-top: 14px; font-size: 12px; letter-spacing: 3px;
-      text-align: center; white-space: nowrap; display: block;
+      margin-top: 14px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-align: center;
+      white-space: nowrap;
+      display: block;
       background: linear-gradient(90deg, #0d3b3f 0%, #4a7c80 60%, #a3b899 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+
     .photo-card.is-bloom {
       z-index: 100 !important;
-      filter: drop-shadow(0 0 12px rgba(74,124,128,0.4)) drop-shadow(0 0 28px rgba(13,59,63,0.3));
+      filter: drop-shadow(0 0 12px rgba(74, 124, 128, 0.4)) drop-shadow(0 0 28px rgba(13, 59, 63, 0.3));
     }
-.photo-card.is-galaxy-core {
-  z-index: 30 !important;
-  filter: drop-shadow(0 0 16px rgba(250,198,247,0.2)) drop-shadow(0 0 40px rgba(13,59,63,0.25));
-}
-.photo-card.is-galaxy-core .card-photo-meta {
-  background: linear-gradient(90deg, #fac6f7 0%, #ff8fd1 60%, #c2d4c8 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  text-shadow: 0 0 8px rgba(250,198,247,0.4);
-}
+
+    .photo-card.is-galaxy-core {
+      z-index: 30 !important;
+      filter: drop-shadow(0 0 16px rgba(250, 198, 247, 0.2)) drop-shadow(0 0 40px rgba(13, 59, 63, 0.25));
+    }
+
+    .photo-card.is-galaxy-core .card-photo-meta {
+      background: linear-gradient(90deg, #fac6f7 0%, #ff8fd1 60%, #c2d4c8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 8px rgba(250, 198, 247, 0.4);
+    }
 
     .photo-card.is-bloom .card-photo-meta {
       background: linear-gradient(90deg, #4a7c80 0%, #a3b899 60%, #c2d4c8 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      text-shadow: 0 0 6px rgba(74,124,128,0.3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 6px rgba(74, 124, 128, 0.3);
     }
+
     .dc-vignette {
-      position: fixed; inset: 0; z-index: 2; pointer-events: none;
-      opacity: 0; will-change: background;
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      will-change: background;
     }
+
     .drag-canvas-page.is-focusing .photo-card:not(.is-bloom) {
-      filter: brightness(0.15) blur(2px); opacity: 0.3; transition: all 0.45s ease;
+      filter: brightness(0.15) blur(2px);
+      opacity: 0.3;
+      transition: all 0.45s ease;
     }
+
     .fullscreen-overlay {
-      position: fixed; inset: 0; z-index: 300; overflow-y: auto;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
     }
-    .fs-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.96); }
-    .fs-layout {
-      position: relative; display: flex; flex-direction: column; align-items: center;
-      padding: 80px 16px 60px; min-height: 100vh; gap: 32px; justify-content: center;
+
+    .fs-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.96);
     }
-    .fs-photo-area { width: 100%; display: flex; justify-content: center; }
-    .fs-flip-card { position: relative; max-width: min(340px, 76vw); text-align: center; }
-      will-change: transform, filter, opacity;
-    .fs-photo-wrap { border-radius: 8px; overflow: hidden; }
-    .fs-photo-wrap img { width: 100%; max-height: 70vh; object-fit: contain; display: block; border-radius: 8px; }
+
+    .fs-layout {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 16px 60px;
+      min-height: 100dvh;
+      gap: 32px;
+    }
+
+    .fs-photo-area {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .fs-flip-card {
+      position: relative;
+      max-width: min(340px, 76vw);
+      text-align: center;
+    }
+
+    will-change: transform,
+    filter,
+    opacity;
+
+    .fs-photo-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .fs-photo-wrap img {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .fs-photo-wrap img.is-portrait {
+      width: auto;
+      height: 100%;
+      max-height: 60vh;
+      transform: rotate(90deg);
+      transform-origin: center center;
+    }
+
     .fs-meta {
-      font-size: 16px; letter-spacing: 4px; text-align: center; margin-top: 12px;
+      font-size: 16px;
+      letter-spacing: 4px;
+      text-align: center;
+      margin-top: 12px;
       background: linear-gradient(90deg, #0d3b3f 0%, #4a7c80 60%, #a3b899 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .fs-view-original {
-      position: fixed; bottom: 28px; right: 28px; z-index: 10001;
-      padding: 10px 20px; border-radius: 24px;
-      background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 10001;
+      padding: 10px 20px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      color: rgba(255,255,255,0.7); font-size: 13px; text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       transition: all 0.25s ease;
       letter-spacing: 0.5px;
     }
+
     .fs-view-original:hover {
-      background: rgba(255,255,255,0.16); color: #fff;
-      border-color: rgba(255,255,255,0.25);
-    }
-    @media (max-width: 600px) {
-      .fs-view-original { bottom: 16px; right: 16px; padding: 8px 16px; font-size: 12px; }
-    }
-    .fs-story-area {
-      width: 100%; max-width: 540px; flex-shrink: 0; opacity: 0; padding-top: 16px;
-    }
-    .fs-story {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: clamp(13px, 3.5vw, 15px); line-height: 1.9;
-      color: #d0d0d0; letter-spacing: 1.5px; text-align: justify;
-    }
-    .film-grain {
-      position: fixed; inset: 0; z-index: 200; pointer-events: none;
-      opacity: 0.035; mix-blend-mode: overlay;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat: repeat; background-size: 256px 256px;
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
+    @media (max-width: 600px) {
+      .fs-view-original {
+        bottom: 16px;
+        right: 16px;
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+    }
+
+    .fs-story-area {
+      width: 100%;
+      max-width: 540px;
+      flex-shrink: 0;
+      opacity: 0;
+      padding-top: 16px;
+    }
+
+    .fs-story {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: clamp(13px, 3.5vw, 15px);
+      line-height: 1.9;
+      color: #d0d0d0;
+      letter-spacing: 1.5px;
+      text-align: justify;
+    }
+
+    .film-grain {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      pointer-events: none;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
   </style>
 </head>
 
@@ -712,57 +906,36 @@
     <div id="html-overlay">
       <img id="single-photo-view" src="" alt="Memory" />
       <div id="wall-view">
-      <div class="drag-canvas-page">
-        <canvas class="dc-particles"></canvas>
-        <div class="dc-vignette"></div>
-        <div class="drag-canvas"></div>
+        <div class="drag-canvas-page">
+          <canvas class="dc-particles"></canvas>
+          <div class="dc-vignette"></div>
+          <div class="drag-canvas"></div>
+        </div>
       </div>
-    </div>
       <div id="ring-scene">
-        <div id="ring-view"></div>
+        <div id="ring-stage"></div>
       </div>
     </div>
     <div id="ui-layer">
     </div>
   </div>
 
-  <div id="ui-panel">
+  <div id="ui-panel" class="hidden">
     <div class="ctrl-section">
       <h3>📝 表白文字自定义</h3>
       <div class="ctrl-group"><label>标题内容</label><input type="text" id="custom-text" value="Miracle Heart"></div>
-      <div class="ctrl-group"><label>字体大小 <span id="val-font-size">4.5</span>rem</label><input type="range"
-          id="font-size" min="2.0" max="9.0" step="0.5" value="4.5"></div>
-      <div class="ctrl-group">
-        <label>字体</label>
-        <select id="font-family">
-          <option value="'Great Vibes', cursive">Great Vibes (浪漫手写)</option>
-          <option value="'Ma Shan Zheng', cursive">马善政 (毛笔体)</option>
-          <option value="'Long Cang', cursive">龙苍 (灵动草书)</option>
-          <option value="'Noto Sans SC', sans-serif">思源黑体</option>
-        </select>
-      </div>
+
     </div>
     <div class="ctrl-section">
       <h3>🎨 场景设置</h3>
-      <div class="ctrl-group"><button id="btn-fullscreen" class="ctrl-btn">⛶ 全屏模式</button></div>
-      <div class="ctrl-group"><button id="btn-share-qr" class="ctrl-btn">📱 分享二维码</button></div>
     </div>
-        <div class="ctrl-section">
+    <div class="ctrl-section">
       <h3>🖱️ 场景切换</h3>
       <div class="ctrl-group"><button id="btn-mode-particle" class="ctrl-btn">🌟 星云粒子模式</button></div>
       <div class="ctrl-group"><button id="btn-mode-wall" class="ctrl-btn">🖼️ 照片墙</button></div>
       <div class="ctrl-group"><button id="btn-mode-ring" class="ctrl-btn">💫 环形画廊</button></div>
     </div>
-<div class="ctrl-section">
-      <h3>🎵 背景音乐</h3>
-      <div class="ctrl-group">
-        <button class="ctrl-btn" onclick="document.getElementById('music-input').click()">📁 上传专属背景音乐 (MP3)</button>
-        <input type="file" id="music-input" accept="audio/*" style="display:none;">
-      </div>
-      <div class="ctrl-row" style="margin-top:6px;">
-        <button id="btn-play-pause" class="ctrl-btn" style="width:40px; flex:none;">▶</button>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.6" style="flex:1;">
-      </div>
+    <div class="ctrl-section">
     </div>
     <div class="ctrl-section">
       <h3>🎛️ 特效微调</h3>
@@ -770,8 +943,8 @@
           min="0" max="100" step="1" value="100"></div>
       <div class="ctrl-group"><label>自转速度 <span id="val-rot">0.002</span></label><input type="range" id="rot-speed"
           min="0" max="0.08" step="0.002" value="0.002"></div>
-      <div class="ctrl-group"><label>音乐灵敏度 <span id="val-beat">1.0</span></label><input type="range" id="beat-sense"
-          min="0" max="3.0" step="0.1" value="1.0"></div>
+      <div class="ctrl-group"><label>音量 <span id="val-vol">60</span>%</label><input type="range" id="volume-slider"
+          min="0" max="100" step="1" value="60"></div>
       <div class="ctrl-group"><label>梦幻辉光强度 <span id="val-bloom">1.0</span></label><input type="range"
           id="bloom-strength" min="0.0" max="2.0" step="0.1" value="1.0"></div>
     </div>
@@ -801,44 +974,56 @@
       camDistance: 105, bloomStrength: 1.0, bloomThreshold: 0.2, bloomRadius: 0.7,
       bloomRes: 0.65, pixelCap: 1.3, baseSphereSegs: 7,
     };
-const PHOTO_ORIGINALS = {
-  '2door.webp': 'photos_original/2door.jpg',
-  '4-cover.webp': 'photos_original/4-cover.jpg',
-  '4-rotated.webp': 'photos_original/4-rotated.jpg',
-  'BD/kun.webp': 'photos_original/BD/kun.jpg',
-  'card-1.webp': 'photos_original/card-1.png',
-  'card-2.webp': 'photos_original/card-2.jpg',
-  'card-3.webp': 'photos_original/card-3.jpg',
-  'card-4.webp': 'photos_original/card-4.jpg',
-  'index.webp': 'photos_original/index.jpg',
-  '小食杂记/mixue.webp': 'photos_original/小食杂记/mixue.jpg',
-  '小食杂记/蛙.webp': 'photos_original/小食杂记/蛙.jpg',
-  '漫/4.webp': 'photos_original/漫/4.jpg',
-  '漫/kun.webp': 'photos_original/漫/kun.jpg',
-  '漫/me.webp': 'photos_original/漫/me.jpg',
-  '漫/wei.webp': 'photos_original/漫/wei.jpg',
-  '漫/ya.webp': 'photos_original/漫/ya.jpg',
-  '漫/zhu.webp': 'photos_original/漫/zhu.jpg',
-  'super CP/zwyz1.webp': 'photos_original/super CP/zwyz1.jpg',
-  '🎓/毕业照1.webp': 'photos_original/🎓/毕业照1.jpg',
-  '🎓/毕业照2.webp': 'photos_original/🎓/毕业照2.jpg',
-  '🎓/毕业照3.webp': 'photos_original/🎓/毕业照3.jpg',
-  '🎓/毕业照4.webp': 'photos_original/🎓/毕业照4.jpg',
-  '🎓/毕业照5.webp': 'photos_original/🎓/毕业照5.jpg',
-  '🎓/毕业照6.webp': 'photos_original/🎓/毕业照6.jpg',
-  '🎓/毕业照7.webp': 'photos_original/🎓/毕业照7.jpg',
-  '🎓/毕业照8.webp': 'photos_original/🎓/毕业照8.jpg',
-  '🎓/毕业照9.webp': 'photos_original/🎓/毕业照9.jpg',
-  '🎓hb/1.webp': 'photos_original/🎓hb/1.png'
-};
-// 手动指定需要旋转 90° 的照片（填文件名，如 'poriad.webp'）
-const ROTATE_90_PHOTOS = new Set([]);
+    const PHOTO_ORIGINALS = {
+      '2door.webp': 'photos_original/2door.jpg',
+      '4-cover.webp': 'photos_original/4-cover.jpg',
+      '4-rotated.webp': 'photos_original/4-rotated.jpg',
+      'BD/kun.webp': 'photos_original/BD/kun.jpg',
+      'card-1.webp': 'photos_original/card-1.png',
+      'card-2.webp': 'photos_original/card-2.jpg',
+      'card-3.webp': 'photos_original/card-3.jpg',
+      'card-4.webp': 'photos_original/card-4.jpg',
+      'index.webp': 'photos_original/index.jpg',
+      'super CP/zwyz1.webp': 'photos_original/super CP/zwyz1.jpg',
+      '小食杂记/mixue.webp': 'photos_original/小食杂记/mixue.jpg',
+      '小食杂记/蛙.webp': 'photos_original/小食杂记/蛙.jpg',
+      '漫/4.webp': 'photos_original/漫/4.jpg',
+      '漫/kun.webp': 'photos_original/漫/kun.jpg',
+      '漫/me.webp': 'photos_original/漫/me.jpg',
+      '漫/wei.webp': 'photos_original/漫/wei.jpg',
+      '漫/ya.webp': 'photos_original/漫/ya.jpg',
+      '漫/zhu.webp': 'photos_original/漫/zhu.jpg',
+      '🎓/毕业照1.webp': 'photos_original/🎓/毕业照1.jpg',
+      '🎓/毕业照2.webp': 'photos_original/🎓/毕业照2.jpg',
+      '🎓/毕业照3.webp': 'photos_original/🎓/毕业照3.jpg',
+      '🎓/毕业照4.webp': 'photos_original/🎓/毕业照4.jpg',
+      '🎓/毕业照5.webp': 'photos_original/🎓/毕业照5.jpg',
+      '🎓/毕业照6.webp': 'photos_original/🎓/毕业照6.jpg',
+      '🎓/毕业照7.webp': 'photos_original/🎓/毕业照7.jpg',
+      '🎓/毕业照8.webp': 'photos_original/🎓/毕业照8.jpg',
+      '🎓/毕业照9.webp': 'photos_original/🎓/毕业照9.jpg',
+      '🎓hb/1.webp': 'photos_original/🎓hb/1.png'
+    };
+    // 手动指定需要旋转 90° 的照片（填文件名，如 'poriad.webp'）
+    const ROTATE_90_PHOTOS = new Set([]);
 
-const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poriad.webp', 'photos/super CP/zwyz1.webp', 'photos/小食杂记/mixue.webp', 'photos/小食杂记/蛙.webp', 'photos/漫/kun.webp', 'photos/漫/me.webp', 'photos/漫/wei.webp', 'photos/漫/ya.webp', 'photos/漫/zhu.webp', 'photos/🎓/毕业照1.webp', 'photos/🎓/毕业照2.webp', 'photos/🎓/毕业照3.webp', 'photos/🎓/毕业照4.webp', 'photos/🎓/毕业照5.webp', 'photos/🎓/毕业照6.webp', 'photos/🎓/毕业照7.webp', 'photos/🎓/毕业照8.webp', 'photos/🎓/毕业照9.webp', 'photos/🎓hb/1.webp'];
+    const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poriad.webp', 'photos/super CP/zwyz1.webp', 'photos/小食杂记/mixue.webp', 'photos/小食杂记/蛙.webp', 'photos/漫/kun.webp', 'photos/漫/me.webp', 'photos/漫/wei.webp', 'photos/漫/ya.webp', 'photos/漫/zhu.webp', 'photos/🎓/毕业照1.webp', 'photos/🎓/毕业照2.webp', 'photos/🎓/毕业照3.webp', 'photos/🎓/毕业照4.webp', 'photos/🎓/毕业照5.webp', 'photos/🎓/毕业照6.webp', 'photos/🎓/毕业照7.webp', 'photos/🎓/毕业照8.webp', 'photos/🎓/毕业照9.webp', 'photos/🎓hb/1.webp'];
 
 
 
     const STATE = { PARTICLE: 'particle', WALL: 'wall', RING: 'ring' };
+    function getViewportSize() {
+      const vv = window.visualViewport;
+      const w = Math.round(vv?.width || document.documentElement.clientWidth || window.innerWidth || 1);
+      const h = Math.round(vv?.height || document.documentElement.clientHeight || window.innerHeight || 1);
+      return { width: w, height: h };
+    }
+    // Update CSS custom properties so all 100vw/100vh references use real viewport
+    function applyViewportCSS() {
+      const { width, height } = getViewportSize();
+      document.documentElement.style.setProperty('--app-vw', width + 'px');
+      document.documentElement.style.setProperty('--app-vh', height + 'px');
+    }
     let currentState = STATE.PARTICLE;
 
     // ═══ 状态持久化：刷新后恢复上次浏览位置 ═══
@@ -847,7 +1032,7 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
       if (currentState === STATE.WALL) {
         state.ox = dcOffsetX; state.oy = dcOffsetY; state.sc = dcScale;
       }
-      try { localStorage.setItem('epa-state', JSON.stringify(state)); } catch(e) {}
+      try { localStorage.setItem('epa-state', JSON.stringify(state)); } catch (e) { }
     }
     function restoreAppState() {
       try {
@@ -860,9 +1045,9 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
             dcOffsetX = st.ox || 0; dcOffsetY = st.oy || 0; dcScale = st.sc || 1;
             clampDragCanvas();
             updateHTMLOverlay();
-            }, 800);
+          }, 800);
         }
-      } catch(e) {}
+      } catch (e) { }
     }
     let blendFactor = 1;   // 心形始终可见（无手势控制）
 
@@ -903,9 +1088,10 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
       const resumeAudio = () => {
         if (audioCtx && audioCtx.state === 'suspended') {
           audioCtx.resume().then(() => {
+            if (audioEl && audioEl.paused && audioEl.src) audioEl.play().catch(() => { });
             document.removeEventListener('click', resumeAudio);
             document.removeEventListener('touchend', resumeAudio);
-          }).catch(() => {});
+          }).catch(() => { });
         }
       };
       document.addEventListener('click', resumeAudio);
@@ -917,10 +1103,9 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
     function initThree() {
       const container = document.getElementById('canvas-container');
       scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x050518, 0.0008); scene.background = new THREE.Color(0x050518); scene.fog.color.setHex(0x050518);
-      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
       camera.position.set(0, 0, CONFIG.camDistance);
       renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-      renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, CONFIG.pixelCap));
       renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.3;
       container.appendChild(renderer.domElement);
@@ -935,25 +1120,103 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
 
       const renderPass = new RenderPass(scene, camera);
       const bloomRes = CONFIG.bloomRes;
-      const bw = Math.round(window.innerWidth * bloomRes), bh = Math.round(window.innerHeight * bloomRes);
+      const bw = 800, bh = 600;
       bloomPass = new UnrealBloomPass(new THREE.Vector2(bw, bh), 1.5, 0.4, 0.85);
       bloomPass.threshold = CONFIG.bloomThreshold; bloomPass.strength = CONFIG.bloomStrength; bloomPass.radius = CONFIG.bloomRadius;
       composer = new EffectComposer(renderer); composer.addPass(renderPass); composer.addPass(bloomPass);
+
+      resizeThree('init'); applyViewportCSS();
 
       createMaterialsAndMeshes(); createDust(); createStarField(); createSnow();
       createRingParticleSystem(); createTrailSystem();
       scene.add(mainGroup);
 
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          const bw = Math.round(window.innerWidth * CONFIG.bloomRes);
-          const bh = Math.round(window.innerHeight * CONFIG.bloomRes);
+      function resizeThree(reason) {
+        const { width, height } = getViewportSize();
+        camera.aspect = width / height; camera.updateProjectionMatrix();
+        renderer.setSize(width, height, true);
+        if (composer) {
+          const bw = Math.round(width * CONFIG.bloomRes);
+          const bh = Math.round(height * CONFIG.bloomRes);
           composer.setSize(bw, bh);
-        }, 150); // 防抖：缩放窗口时不做连续重算
+        }
+      }
+      let _rtTimer = null;
+      function scheduleViewportRelayout(reason) {
+        applyViewportCSS();
+        resizeThree(reason);
+        clearTimeout(_rtTimer);
+        _rtTimer = setTimeout(() => {
+          resizeThree(reason + '+100');
+          if (typeof resizeDCParticles === 'function') resizeDCParticles();
+          if (typeof clampDragCanvas === 'function') clampDragCanvas();
+          if (typeof fitWallToScreen === 'function') fitWallToScreen();
+          setTimeout(() => {
+            resizeThree(reason + '+300');
+            if (typeof resizeDCParticles === 'function') resizeDCParticles();
+            if (typeof clampDragCanvas === 'function') clampDragCanvas();
+            if (typeof fitWallToScreen === 'function') fitWallToScreen();
+          }, 200);
+          setTimeout(() => {
+            resizeThree(reason + '+600');
+            if (typeof fitWallToScreen === 'function') fitWallToScreen();
+          }, 300);
+        }, 100);
+      }
+      window.addEventListener('resize', () => scheduleViewportRelayout('window.resize'), { passive: true });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => scheduleViewportRelayout('visualViewport.resize'), { passive: true });
+        window.visualViewport.addEventListener('scroll', () => scheduleViewportRelayout('visualViewport.scroll'), { passive: true });
+      }
+      // Double-back/side-swipe to exit fullscreen (ALL modes) + canvas distortion fix
+
+      function relayoutPage() {
+        resizeThree('relayout');
+        if (typeof resizeDCParticles === 'function') resizeDCParticles();
+        if (typeof clampDragCanvas === 'function') clampDragCanvas();
+        if (typeof fitWallToScreen === 'function') fitWallToScreen();
+      }
+
+
+      // Tap-to-reenter fullscreen after accidental exit
+      let fsReenterHint = null;
+      function showReenterHint() {
+        if (fsReenterHint) return;
+        fsReenterHint = document.createElement('div');
+        fsReenterHint.id = 'fs-reenter-hint';
+        fsReenterHint.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);color:#fff;font:14px/1.6 -apple-system,sans-serif;letter-spacing:2px;cursor:pointer;text-align:center;';
+        fsReenterHint.innerHTML = '轻触屏幕<br><span style="font-size:11px;color:#999">进入全屏模式</span>';
+        fsReenterHint.addEventListener('click', async () => {
+          try {
+            await document.documentElement.requestFullscreen();
+            if (currentState === STATE.RING && screen.orientation && screen.orientation.lock) {
+              await screen.orientation.lock('landscape');
+            }
+          } catch (e) { }
+          hideReenterHint();
+        });
+        document.body.appendChild(fsReenterHint);
+      }
+      function hideReenterHint() {
+        if (fsReenterHint) { fsReenterHint.remove(); fsReenterHint = null; }
+      }
+      document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+          scheduleViewportRelayout('fullscreenchange-exit');
+          showReenterHint();
+        } else {
+          hideReenterHint();
+          scheduleViewportRelayout('fullscreenchange-enter');
+        }
+      });
+      document.addEventListener('webkitfullscreenchange', () => {
+        if (!document.webkitFullscreenElement && !document.fullscreenElement) {
+          scheduleViewportRelayout('webkitfullscreenchange-exit');
+          showReenterHint();
+        }
+      });
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => scheduleViewportRelayout('orientationchange'), 250);
       });
     }
 
@@ -1058,21 +1321,21 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
 
     // ★ 环形画廊漂浮粒子背景
     function createRingParticleSystem() {
-      const count = 500;
+      const count = 300;
       const pos = new Float32Array(count * 3);
       const data = [];
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const radius = 150 + Math.random() * 180;
+        const radius = 200 + Math.random() * 250;
         pos[i * 3] = Math.cos(angle) * radius;
-        pos[i * 3 + 1] = (Math.random() - 0.5) * 120;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 100;
         pos[i * 3 + 2] = Math.sin(angle) * radius * 0.45;
-        data.push({ phase: Math.random() * Math.PI * 2, speed: 0.003 + Math.random() * 0.006, floatOffset: Math.random() * 100 });
+        data.push({ phase: Math.random() * Math.PI * 2, speed: 0.001 + Math.random() * 0.003, floatOffset: Math.random() * 100 });
       }
       const geo = new THREE.BufferGeometry();
       geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
       const mat = new THREE.PointsMaterial({
-        color: 0xffb6c1, size: 0.5, transparent: true, opacity: 0.35,
+        color: 0xffb6c1, size: 0.35, transparent: true, opacity: 0.18,
         blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
       });
       const points = new THREE.Points(geo, mat);
@@ -1283,7 +1546,7 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
         window.snowSystem.geometry.attributes.position.needsUpdate = true;
       }
 
-      // ★ 环形画廊漂浮粒子背景更新
+      // ★ 环形画廊漂浮粒子 — 极轻微漂浮
       if (ringParticlesSys) {
         if (currentState === STATE.RING) {
           const sys = ringParticlesSys;
@@ -1294,8 +1557,8 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
             const baseX = base[i * 3], baseZ = base[i * 3 + 2];
             const baseRadius = Math.sqrt(baseX * baseX + baseZ * baseZ);
             const angle = d.phase + time * d.speed;
-            const r = baseRadius + Math.sin(time * 0.7 + d.floatOffset) * 15;
-            const floatY = Math.sin(time * 0.5 + d.floatOffset) * 12;
+            const r = baseRadius + Math.sin(time * 0.3 + d.floatOffset) * 8;
+            const floatY = Math.sin(time * 0.22 + d.floatOffset) * 6;
             pos[i * 3] = Math.cos(angle) * r;
             pos[i * 3 + 1] = base[i * 3 + 1] + floatY;
             pos[i * 3 + 2] = Math.sin(angle) * r * 0.5;
@@ -1307,38 +1570,37 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
         }
       }
 
-      // 【核心改进】：环形画廊稳定恒速轴
+      // ★ 环形画廊 — 真3D环绕，仅旋转父容器
       if (currentState === STATE.RING) {
-        const ringView = document.getElementById('ring-view');
-        if (ringView) {
-          // 彻底脱离右手干扰，由纯净时间增量 + 音乐低音律动驱动，永不停歇、极其平稳
-          ringCurrentAngle += 0.004 + beat * 0.003;
-          const imgs = ringView.querySelectorAll('.ring-img');
-          // 根据照片数量动态计算环形半径，避免拥挤或稀疏
-          const numPhotos = imgs.length;
-          const spacing = 210; // 每张照片占弧长(px)
-          const computedRadius = (numPhotos * spacing) / (2 * Math.PI);
-          const maxRadius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
-          const radius = Math.max(180, Math.min(computedRadius, maxRadius));
-          imgs.forEach((img, i) => {
-            const a = (Math.PI * 2 / numPhotos) * i + ringCurrentAngle;
-            const x = Math.cos(a) * radius;
-            const waveY = Math.sin(time * 2.0 + i) * 14;
-            const y = Math.sin(a) * radius * 0.35 + waveY;
-            const depth = Math.sin(a);
-            // 基准缩放：近大远小
-            const baseScale = THREE.MathUtils.lerp(0.75, 1.25, (depth + 1) / 2);
-            // 高斯弹跳：转到正前方(depth≈1)时弹到约2x，离开展开平滑收回
-            const pop = 0.8 * Math.exp(-Math.pow((1 - depth) * 3.5, 2));
-            const scale = baseScale + pop;
-            img.style.transform = `translate3d(${x}px,${y}px,0) scale(${scale})`;
-
-            if (depth > 0.2 && Math.abs(Math.cos(a)) < 0.6) {
-              img.classList.remove('is-background'); img.style.zIndex = 100;
+        const stage = document.getElementById('ring-stage');
+        if (stage) {
+          // Slow, steady rotation — museum-pace
+          ringCurrentAngle += 0.0018 + beat * 0.0012;
+          // Gentle breathing — tilt + radius pulse
+          const breatheX = Math.sin(time * 0.35) * 1.8;
+          const baseTiltX = 12 + breatheX; // 10°~14°
+          const breatheScale = 1 + Math.sin(time * 0.28) * 0.015; // ~0.985~1.015
+          // Only animate the parent — zero per-card transform writes
+          stage.style.transform = `rotateX(${baseTiltX}deg) rotateY(${ringCurrentAngle}rad) scale(${breatheScale.toFixed(3)})`;
+          // Depth-of-field: mark front-facing cards for glow/caption
+          const cards = stage.querySelectorAll('.ring-card');
+          const count = cards.length;
+          for (let i = 0; i < count; i++) {
+            const card = cards[i];
+            const angle = (Math.PI * 2 / count) * i + ringCurrentAngle;
+            // angle modulo 2π, check if facing camera
+            const facing = (Math.cos(angle) < -0.65); // roughly facing us
+            if (facing) {
+              card.classList.add('is-front');
             } else {
-              img.classList.add('is-background'); img.style.zIndex = Math.floor((depth + 1) * 10);
+              card.classList.remove('is-front');
             }
-          });
+            // Subtle depth-of-field via filter
+            const proximity = (Math.cos(angle) + 1) / 2; // 0(far) → 1(near)
+            const blur = (1 - proximity) * 0.8; // max 0.8px blur at back
+            const bright = 0.65 + proximity * 0.35; // 0.65 → 1.0
+            card.style.filter = `blur(${blur.toFixed(2)}px) brightness(${bright.toFixed(2)})`;
+          }
         }
       }
 
@@ -1404,11 +1666,11 @@ const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poria
       }
     }
 
-function triggerPhotoFlow() {
+    function triggerPhotoFlow() {
       if (photoUrls.length === 0) return;
-      if (currentState === STATE.PARTICLE) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); }
-      else if (currentState === STATE.WALL) { currentState = STATE.RING; renderRingView(); saveAppState(); }
-      else if (currentState === STATE.RING) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); }
+      if (currentState === STATE.PARTICLE) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { }); } catch (e) { } }
+      else if (currentState === STATE.WALL) { currentState = STATE.RING; renderRingView(); saveAppState(); try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape'); }).catch(() => { }); } catch (e) { } }
+      else if (currentState === STATE.RING) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { }); } catch (e) { } }
       updateHTMLOverlay();
     }
 
@@ -1452,8 +1714,8 @@ function triggerPhotoFlow() {
       initDCParticles();
       dcPage.style.display = 'none';
       if (dcVignette) dcVignette.style.opacity = '0';
-      const initX = -(CANVAS_W - window.innerWidth) / 2;
-      const initY = -(CANVAS_H - window.innerHeight) / 2;
+      const initX = -(CANVAS_W - getViewportSize().width) / 2;
+      const initY = -(CANVAS_H - getViewportSize().height) / 2;
       dcOffsetX = Math.min(0, initX);
       dcOffsetY = Math.min(0, initY);
       clampDragCanvas();
@@ -1598,8 +1860,8 @@ function triggerPhotoFlow() {
       dcParticles = [];
       for (let i = 0; i < DC_PARTICLE_COUNT; i++) {
         dcParticles.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
+          x: Math.random() * getViewportSize().width,
+          y: Math.random() * getViewportSize().height,
           r: Math.random() * 1.2 + 0.3,
           vx: (Math.random() - 0.5) * 0.35,
           vy: (Math.random() - 0.5) * 0.35,
@@ -1612,8 +1874,8 @@ function triggerPhotoFlow() {
 
     function resizeDCParticles() {
       if (!dcBgCanvas) return;
-      dcBgCanvas.width = window.innerWidth;
-      dcBgCanvas.height = window.innerHeight;
+      dcBgCanvas.width = getViewportSize().width;
+      dcBgCanvas.height = getViewportSize().height;
     }
 
     function animateDCParticles() {
@@ -1634,8 +1896,8 @@ function triggerPhotoFlow() {
     }
 
     function clampDragCanvas() {
-      const pw = dcPage.clientWidth || window.innerWidth;
-      const ph = dcPage.clientHeight || window.innerHeight;
+      const pw = dcPage.clientWidth || getViewportSize().width;
+      const ph = dcPage.clientHeight || getViewportSize().height;
       const visualW = CANVAS_W * dcScale;
       const visualH = CANVAS_H * dcScale;
       const minX = Math.min(0, pw - visualW);
@@ -1722,7 +1984,7 @@ function triggerPhotoFlow() {
         <div class="fs-layout">
           <div class="fs-photo-area">
             <div class="fs-flip-card">
-              <div class="fs-photo-wrap"><img src="${data.photo}" alt="" /></div>
+              <div class="fs-photo-wrap"><img src="${data.photo}" alt=""${ROTATE_90_PHOTOS.has(data.photo.split('/').pop()) ? ' class="is-portrait"' : ''} /></div>
               <div class="fs-meta">${data.meta}</div>
             </div>
           </div>
@@ -1780,27 +2042,6 @@ function triggerPhotoFlow() {
         });
       });
 
-      // 触摸/点击：横滑或点击背景 → 返回照片墙
-      let fsTouchStartX = 0, fsTouchStartY = 0;
-      overlay.addEventListener('touchstart', (e) => {
-        fsTouchStartX = e.touches[0].clientX;
-        fsTouchStartY = e.touches[0].clientY;
-      }, { passive: true });
-      overlay.addEventListener('touchmove', (e) => {
-        const dx = e.touches[0].clientX - fsTouchStartX;
-        const dy = e.touches[0].clientY - fsTouchStartY;
-        // 横向为主时阻止浏览器后退手势
-        if (Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-          e.preventDefault();
-        }
-      }, { passive: false });
-      overlay.addEventListener('touchend', (e) => {
-        const dx = e.changedTouches[0].clientX - fsTouchStartX;
-        const dy = e.changedTouches[0].clientY - fsTouchStartY;
-        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-          dismissDCFullscreen(overlay);
-        }
-      });
       overlay.addEventListener('click', (e) => {
         if (e.target.closest('.fs-photo-wrap') || e.target.closest('.fs-meta')) return;
         dismissDCFullscreen(overlay);
@@ -1858,8 +2099,8 @@ function triggerPhotoFlow() {
 
 
     function fitWallToScreen() {
-      const pw = window.innerWidth;
-      const ph = window.innerHeight;
+      const pw = getViewportSize().width;
+      const ph = getViewportSize().height;
       const pad = 0.88;  // 留 12% 边距
       const sx = (pw * pad) / CANVAS_W;
       const sy = (ph * pad) / CANVAS_H;
@@ -1957,8 +2198,49 @@ function triggerPhotoFlow() {
     // initDragCanvas called on first use (lazy)
 
     function renderRingView() {
-      const ring = document.getElementById('ring-view'); ring.innerHTML = ''; if (photoUrls.length === 0) return;
-      photoUrls.forEach((url, i) => { const img = document.createElement('img'); img.src = url; img.className = 'ring-img'; ring.appendChild(img); });
+      const ring = document.getElementById('ring-stage'); ring.innerHTML = ''; if (photoUrls.length === 0) return;
+      const count = photoUrls.length;
+      const R = 200;           // ring radius (negative Z = behind screen)
+      const cardW = 40, cardH = 53;  // tiny, edit these to resize
+      const padH = 6, padV = 13;     // horizontal + vertical polaroid padding
+      const totalW = cardW + padH;
+      const totalH = cardH + padV;
+      photoUrls.forEach((url, i) => {
+        const angle = (Math.PI * 2 / count) * i;
+        const card = document.createElement('div');
+        card.className = 'ring-card';
+        card.style.width = totalW + 'px';
+        card.style.height = totalH + 'px';
+        card.style.transformOrigin = `${totalW / 2}px ${totalH / 2}px`;
+        card.style.transform = `rotateY(${angle}rad) translateZ(-${R}px)`;
+        // subtle organic stagger
+        const yOff = Math.sin(i * 1.7) * 2;
+        card.style.marginTop = yOff + 'px';
+
+        const inner = document.createElement('div');
+        inner.className = 'ring-card-inner';
+        inner.style.width = cardW + 'px';
+        inner.style.height = cardH + 'px';
+        const img = document.createElement('img');
+        img.src = url;
+        img.loading = 'lazy';
+        const rotFile = url.split('/').pop();
+        if (ROTATE_90_PHOTOS.has(rotFile)) {
+          img.style.transform = 'rotate(90deg)';
+          img.style.width = 'auto';
+          img.style.height = '100%';
+        }
+        inner.appendChild(img);
+
+        const caption = document.createElement('div');
+        caption.className = 'ring-caption';
+        const fileName = url.split('/').pop().replace(/\.[^.]+$/, '');
+        caption.textContent = fileName.length > 6 ? fileName.slice(0, 5) + '…' : fileName;
+
+        card.appendChild(inner);
+        card.appendChild(caption);
+        ring.appendChild(card);
+      });
     }
 
     function updateStatus(msg, color) {
@@ -1970,6 +2252,7 @@ function triggerPhotoFlow() {
     function initAudio() {
       try {
         audioEl = new Audio(); audioEl.crossOrigin = "anonymous"; audioEl.loop = true;
+        audioEl.src = 'music/backgroud.mp3';
         const Actx = window.AudioContext || window.webkitAudioContext;
         audioCtx = new Actx();
         analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
@@ -1981,20 +2264,13 @@ function triggerPhotoFlow() {
       } catch (e) { console.log("Audio init error:", e); }
     }
 
-function setupUI() {
+    function setupUI() {
       const titleEl = document.getElementById('main-title');
       document.getElementById('toggle-btn').addEventListener('click', () => document.getElementById('ui-panel').classList.toggle('hidden'));
 
-      document.getElementById('btn-fullscreen').addEventListener('click', () => {
-        if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); document.getElementById('btn-fullscreen').innerText = "❌ 退出全屏"; }
-        else { document.exitFullscreen(); document.getElementById('btn-fullscreen').innerText = "⛶ 全屏模式"; }
-      });
+
 
       document.getElementById('custom-text').addEventListener('input', (e) => titleEl.innerText = e.target.value);
-      document.getElementById('font-size').addEventListener('input', (e) => {
-        titleEl.style.fontSize = e.target.value + 'rem'; document.getElementById('val-font-size').innerText = e.target.value;
-      });
-      document.getElementById('font-family').addEventListener('change', (e) => titleEl.style.fontFamily = e.target.value);
 
       // ★ 粒子散聚滑块
       document.getElementById('blend-factor').addEventListener('input', (e) => {
@@ -2005,77 +2281,60 @@ function setupUI() {
       document.getElementById('rot-speed').addEventListener('input', (e) => {
         rotationSpeed = parseFloat(e.target.value); document.getElementById('val-rot').innerText = rotationSpeed.toFixed(3);
       });
-      document.getElementById('beat-sense').addEventListener('input', (e) => {
-        document.getElementById('val-beat').innerText = parseFloat(e.target.value).toFixed(1);
+      document.getElementById('volume-slider').addEventListener('input', (e) => {
+        const v = parseInt(e.target.value);
+        document.getElementById('val-vol').innerText = v;
+        if (audioEl) audioEl.volume = v / 100;
       });
       document.getElementById('bloom-strength').addEventListener('input', (e) => {
         const v = parseFloat(e.target.value); document.getElementById('val-bloom').innerText = v.toFixed(1);
         if (bloomPass) bloomPass.strength = v;
       });
 
-      document.getElementById('music-input').addEventListener('change', (e) => {
-        if (e.target.files[0] && audioEl) {
-          audioEl.src = URL.createObjectURL(e.target.files[0]);
-          audioEl.play().then(() => {
-            document.getElementById('btn-play-pause').innerText = "⏸";
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-          }).catch(err => console.log(err));
-        }
-      });
 
-      document.getElementById('btn-play-pause').addEventListener('click', () => {
-        if (!audioEl) return;
-        if (audioEl.paused) { audioEl.play(); document.getElementById('btn-play-pause').innerText = "⏸"; }
-        else { audioEl.pause(); document.getElementById('btn-play-pause').innerText = "▶"; }
-      });
-
-      document.getElementById('volume-slider').addEventListener('input', (e) => { if (audioEl) audioEl.volume = e.target.value; });
 
 
       // ★ 模式切换按钮（替代手势交互）
-      document.getElementById('btn-mode-particle').addEventListener('click', () => {
+
+      document.getElementById('btn-mode-particle').addEventListener('click', async () => {
+        document.getElementById('ui-panel').classList.add('hidden');
         if (currentState !== STATE.PARTICLE) {
           hideDragCanvas();
           currentState = STATE.PARTICLE;
           updateHTMLOverlay();
           saveAppState();
+          try { screen.orientation.unlock(); } catch (e) { }
+          try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); } catch (e) { }
         }
       });
 
-      document.getElementById('btn-mode-wall').addEventListener('click', () => {
+      document.getElementById('btn-mode-wall').addEventListener('click', async () => {
+        document.getElementById('ui-panel').classList.add('hidden');
         if (photoUrls.length > 0) {
           currentState = STATE.WALL;
           showDragCanvas();
           updateHTMLOverlay();
           saveAppState();
+          try { screen.orientation.unlock(); } catch (e) { }
+          try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); } catch (e) { }
         }
       });
-      document.getElementById('btn-mode-ring').addEventListener('click', () => {
+      document.getElementById('btn-mode-ring').addEventListener('click', async () => {
+        document.getElementById('ui-panel').classList.add('hidden');
         if (photoUrls.length > 0) {
           hideDragCanvas();
           currentState = STATE.RING;
           renderRingView();
           updateHTMLOverlay();
           saveAppState();
-        } else {
+          try {
+            if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+            if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape');
+          } catch (e) { }
         }
       });
 
-      // ★ 分享二维码
-      document.getElementById('btn-share-qr').addEventListener('click', async () => {
-        const modal = document.getElementById('qr-modal');
-        const canvas = document.getElementById('qr-canvas');
-        const urlEl = document.getElementById('qr-url');
-        try {
-          const url = window.location.href;
-          await QRCode.toCanvas(canvas, url, { width: 200, margin: 2, color: { dark: '#ffb6c1', light: '#181225' } });
-          urlEl.textContent = url;
-          modal.classList.add('show');
-        } catch (e) { console.error('QR Code error:', e); }
-      });
-      document.getElementById('qr-close').addEventListener('click', () => {
-        document.getElementById('qr-modal').classList.remove('show');
-      });
+
 
       // ★ 自动加载 photos/ 目录下的所有照片
       async function autoLoadPhotos() {
@@ -2140,50 +2399,10 @@ function setupUI() {
       photoParticleCache = [];
       photoUrls = [];
     }
-    // ═══ 全屏退出后布局恢复 ═══
-    // 浏览器全屏变化时（如iOS Safari边缘滑动退出），
-    // 分多帧多次重算布局，确保 canvas / 照片墙 / 环形画廊完整恢复。
-    function relayoutAll() {
-      // Three.js 画布适配
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      const bw = Math.round(window.innerWidth * CONFIG.bloomRes);
-      const bh = Math.round(window.innerHeight * CONFIG.bloomRes);
-      if (composer) composer.setSize(bw, bh);
-
-      // HTML 叠加层状态恢复
-      updateHTMLOverlay();
-
-      // 根据当前状态恢复对应布局
-      if (currentState === STATE.WALL) {
-        fitWallToScreen();
-        resizeDCParticles();
-      } else if (currentState === STATE.RING) {
-        renderRingView();
-      }
-    }
-
-    function scheduleRelayoutAfterFullscreenChange() {
-      relayoutAll();
-      requestAnimationFrame(() => {
-        relayoutAll();
-        requestAnimationFrame(() => relayoutAll());
-      });
-      setTimeout(() => relayoutAll(), 50);
-      setTimeout(() => relayoutAll(), 150);
-      setTimeout(() => relayoutAll(), 300);
-      setTimeout(() => relayoutAll(), 600);
-      setTimeout(() => relayoutAll(), 1000);
-    }
-
-    document.addEventListener('fullscreenchange', scheduleRelayoutAfterFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', scheduleRelayoutAfterFullscreenChange);
-
     window.addEventListener('beforeunload', cleanupResources);
   </script>
   <script>
-    (function(){
+    (function () {
       let done = false;
       function go() {
         if (done) return; done = true;
@@ -2191,9 +2410,14 @@ function setupUI() {
         if (el.requestFullscreen) el.requestFullscreen();
         else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
       }
-      document.addEventListener("click", go, {once: true});
-      document.addEventListener("touchend", go, {once: true});
+      document.addEventListener("click", go, { once: true });
+      document.addEventListener("touchend", go, { once: true });
     })();
   </script>
+
+
+
+
 </body>
+
 </html>
