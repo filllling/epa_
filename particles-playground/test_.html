@@ -1661,7 +1661,7 @@
 
     function triggerPhotoFlow() {
       if (photoUrls.length === 0) return;
-      if (currentState === STATE.RING) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { }); } catch (e) { } }
+      if (currentState === STATE.RING) { ringFullscreenRequested = false; currentState = STATE.WALL; showDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { }); } catch (e) { } }
       else if (currentState === STATE.WALL) { currentState = STATE.PARTICLE; hideDragCanvas(); saveAppState(); try { screen.orientation.unlock(); } catch (e) { } }
       else if (currentState === STATE.PARTICLE) { currentState = STATE.RING; renderRingView(); saveAppState(); try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape'); }).catch(() => { }); } catch (e) { } }
       updateHTMLOverlay();
@@ -2246,12 +2246,23 @@
       });
     }
 
-    // 环形画廊双击 → 照片墙
-    let ringLastTap = 0;
+    // 环形画廊交互：首次点击 → 请求横屏全屏；双击 → 照片墙
+    let ringLastTap = 0, ringFullscreenRequested = false;
     (function initRingDoubleTap() {
       document.addEventListener('click', (e) => {
         if (currentState !== STATE.RING) return;
         if (e.target.closest('#ui-panel') || e.target.closest('#toggle-btn') || e.target.closest('button')) return;
+        // 首次点击请求横屏全屏（在用户手势中调用）
+        if (!ringFullscreenRequested) {
+          ringFullscreenRequested = true;
+          try {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().then(() => {
+                if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {});
+              }).catch(() => {});
+            }
+          } catch (e) {}
+        }
         const now = Date.now();
         if (now - ringLastTap < 350) {
           currentState = STATE.WALL;
@@ -2344,6 +2355,7 @@
         document.getElementById('ui-panel').classList.add('hidden');
         if (photoUrls.length > 0) {
           hideDragCanvas();
+          ringFullscreenRequested = false;
           currentState = STATE.RING;
           renderRingView();
           updateHTMLOverlay();
@@ -2403,8 +2415,6 @@
         if (currentState === STATE.RING) {
           renderRingView();
           updateHTMLOverlay();
-          // 默认环形画廊横屏
-          try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }).catch(() => {}); } catch (e) {}
         }
       });
     }
