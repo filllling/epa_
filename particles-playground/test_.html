@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Our Miracle Heart - Silk Confession Edition</title>
+  <title>MEMORIZE!</title>
   <link
     href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Great+Vibes&family=Ma+Shan+Zheng&family=Long+Cang&family=Noto+Sans+SC:wght@700&display=swap"
     rel="stylesheet">
@@ -888,7 +888,7 @@
 <body class="bg-deep">
 
   <div id="start-screen">
-    <div id="start-title">Miracle<span>Heart</span></div>
+    <div id="start-title">MEMORIZE!</div>
     <div id="start-sub">Memory Nebula</div>
     <div id="start-hint"></div>
     <button id="btn-start">Enter</button>
@@ -898,7 +898,7 @@
     </div>
   </div>
 
-  <div id="main-title">Miracle Heart</div>
+  <div id="main-title">MEMORIZE!</div>
   <button id="toggle-btn">☰</button>
 
   <div id="canvas-wrapper">
@@ -924,9 +924,9 @@
 
     <div class="ctrl-section">
       <h3>场景切换</h3>
-      <div class="ctrl-group"><button id="btn-mode-particle" class="ctrl-btn">星云粒子</button></div>
-      <div class="ctrl-group"><button id="btn-mode-wall" class="ctrl-btn">照片墙</button></div>
       <div class="ctrl-group"><button id="btn-mode-ring" class="ctrl-btn">环形画廊</button></div>
+      <div class="ctrl-group"><button id="btn-mode-wall" class="ctrl-btn">照片墙</button></div>
+      <div class="ctrl-group"><button id="btn-mode-particle" class="ctrl-btn">星云粒子</button></div>
     </div>
     <div class="ctrl-section">
     </div>
@@ -945,7 +945,7 @@
 
   <div id="qr-modal">
     <div id="qr-modal-box">
-      <h3>Miracle Heart</h3>
+      <h3>MEMORIZE!</h3>
       <canvas id="qr-canvas"></canvas>
       <p>扫一扫，在手机上打开</p>
       <div id="qr-url"></div>
@@ -2246,6 +2246,24 @@
       });
     }
 
+    // 环形画廊双击 → 照片墙
+    let ringLastTap = 0;
+    (function initRingDoubleTap() {
+      document.addEventListener('click', (e) => {
+        if (currentState !== STATE.RING) return;
+        if (e.target.closest('#ui-panel') || e.target.closest('#toggle-btn') || e.target.closest('button')) return;
+        const now = Date.now();
+        if (now - ringLastTap < 350) {
+          currentState = STATE.WALL;
+          showDragCanvas();
+          updateHTMLOverlay();
+          saveAppState();
+          try { screen.orientation.unlock(); } catch (e) {}
+        }
+        ringLastTap = now;
+      });
+    })();
+
     function updateStatus(msg, color) {
       document.getElementById('status-msg').innerText = msg;
       const dot = document.getElementById('status-dot');
@@ -2385,6 +2403,8 @@
         if (currentState === STATE.RING) {
           renderRingView();
           updateHTMLOverlay();
+          // 默认环形画廊横屏
+          try { if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }).catch(() => {}); } catch (e) {}
         }
       });
     }
