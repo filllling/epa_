@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Miracle Heart - Silk Confession Edition</title>
+  <link
+    href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Great+Vibes&family=Ma+Shan+Zheng&family=Long+Cang&family=Noto+Sans+SC:wght@700&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      user-select: none;
+      transition: background 1s ease;
+    }
+
+    body.bg-black {
+      background: radial-gradient(ellipse at center bottom, #0c0714 0%, #05030a 50%, #020105 100%);
+    }
+
+    body.bg-deep {
+      background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+    }
+
+    body.bg-warm {
+      background: radial-gradient(circle at center, #2e1a1a 0%, #0f0505 100%);
+    }
+
+    body.bg-aurora {
+      background: radial-gradient(circle at top, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    }
+
+
+
+
+    /* === 首页启动画面 — EPA 极简暗黑风格 === */
+    #start-screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #0a0a0a;
+      z-index: 200;
+      display: none;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      transition: opacity 1.2s ease;
+    }
+    #start-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 40%, rgba(250,198,247,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    #start-title {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    #start-title span { color: #fac6f7; }
+
+    #start-sub {
+      color: #666;
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    #start-hint { display: none; }
+
+    #btn-start {
+      padding: 14px 48px;
+      font-size: 14px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 2px;
+      color: #999;
+      cursor: pointer;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: all 0.4s ease;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+    #btn-start:hover {
+      border-color: #fac6f7;
+      color: #fac6f7;
+      transform: none;
+      box-shadow: none;
+    }
+
+    #start-cover {
+      width: 120px;
+      height: auto;
+      margin: 24px 0 8px;
+      opacity: 0.3;
+      filter: grayscale(1);
+      transition: opacity 0.6s, filter 0.6s;
+    }
+    #start-cover:hover {
+      opacity: 0.7;
+      filter: grayscale(0);
+    }
+    #start-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 40px;
+    }
+    #start-dots span {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #333;
+    }
+
+    /* === 主标题 === */
+    #main-title {
+      position: absolute;
+      top: 25px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      z-index: 50;
+      pointer-events: none;
+      opacity: 1;
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      transition: all 0.5s ease;
+      will-change: transform, opacity;
+    }
+
+
+
+    /* === 照片展示层 === */
+    #html-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(3, 3, 3, 0.3);
+      backdrop-filter: blur(0px);
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 定制：为单张照片加入高级的果冻回弹(Pop-out)动效 */
+    #single-photo-view {
+      max-width: 38vw;
+      max-height: 50vh;
+      object-fit: contain;
+      border: 4px solid rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 182, 193, 0.4);
+      display: none;
+      transform: scale(0.85);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #wall-view {
+      display: none;
+      width: 85%;
+      height: 85%;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+      overflow-y: auto;
+      padding: 30px;
+      box-sizing: border-box;
+      align-content: start;
+      mask-image: linear-gradient(to bottom, transparent 0%, white 8%, white 92%, transparent 100%);
+    }
+
+    @keyframes meteorFly {
+      0% {
+        transform: translate(400px, -400px) scale(0.4) rotate(10deg);
+        opacity: 0;
+        filter: blur(8px);
+      }
+
+      100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        opacity: 1;
+        filter: blur(0px);
+      }
+    }
+
+    .meteor-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      transition: transform 0.5s ease, border-color 0.5s ease;
+      will-change: transform, opacity;
+    }
+
+    .meteor-img:hover {
+      transform: scale(1.06);
+      border-color: rgba(255, 182, 193, 1);
+      box-shadow: 0 15px 35px rgba(255, 182, 193, 0.4);
+    }
+
+    #ring-scene {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #ring-view {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      transform-style: flat;
+    }
+
+    .ring-img {
+      position: absolute;
+      width: 190px;
+      height: 142px;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+      margin-left: -95px;
+      margin-top: -71px;
+      transition: border-color 0.4s, box-shadow 0.4s, filter 0.6s ease, transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1);
+      filter: brightness(1) blur(0px);
+      will-change: transform;
+    }
+
+    .ring-img.is-background {
+      filter: brightness(0.4) blur(2px);
+      border-color: rgba(255, 182, 193, 0.3);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .ring-img:hover {
+      border-color: #ffb6c1;
+      box-shadow: 0 20px 60px rgba(255, 182, 193, 0.6);
+      filter: brightness(1.2) blur(0px) !important;
+      scale: 1.1;
+    }
+
+    .show-zoom #html-overlay {
+      opacity: 1;
+      pointer-events: auto;
+      backdrop-filter: blur(12px);
+      background: rgba(5, 3, 10, 0.5);
+    }
+
+    .show-zoom #single-photo-view {
+      display: block;
+    }
+
+    .show-wall #html-overlay {
+      opacity: 1;
+      pointer-events: auto;
+      background: rgba(5, 3, 10, 0.9);
+      backdrop-filter: blur(20px);
+    }
+
+    .show-wall #wall-view {
+      display: grid;
+    }
+
+    .show-ring #html-overlay {
+      opacity: 1;
+      pointer-events: auto;
+      background: rgba(5, 3, 10, 0.65);
+      backdrop-filter: blur(16px);
+    }
+
+    .show-ring #ring-scene {
+      display: block;
+    }
+
+    /* === UI 信息层 === */
+    #ui-layer {
+      position: absolute;
+      bottom: 40px;
+      left: 200px;
+      z-index: 10;
+      pointer-events: none;
+      color: #fff;
+      transition: opacity 0.5s;
+    }
+
+    #status-text {
+      display: none;
+      font-size: 0.9rem;
+      font-weight: 300;
+      letter-spacing: 1px;
+      color: #eaeaea;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff758c;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 117, 140, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(255, 117, 140, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 117, 140, 0);
+      }
+    }
+
+    /* === 设置面板 === */
+    #toggle-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+      color: #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      z-index: 101;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+    }
+
+    #toggle-btn:hover {
+      background: rgba(255, 117, 140, 0.2);
+      color: #ff758c;
+    }
+
+    #ui-panel {
+      position: absolute;
+      top: 76px;
+      right: 24px;
+      width: 290px;
+      max-height: 82vh;
+      overflow-y: auto;
+      background: rgba(12, 7, 20, 0.9);
+      backdrop-filter: blur(18px);
+      padding: 18px;
+      border-radius: 14px;
+      color: #ddd;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 100;
+      transition: transform 0.4s ease, opacity 0.4s;
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    #ui-panel.hidden {
+      transform: translateX(130%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ctrl-section {
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+
+    .ctrl-group {
+      margin-bottom: 8px;
+    }
+
+    .ctrl-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    .ctrl-group h3 {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      color: #ff758c;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: #ff758c;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 7px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #444;
+      color: #ff758c;
+      border-radius: 4px;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+
+    select {
+      width: 100%;
+      padding: 5px;
+      background: #1a1a24;
+      border: 1px solid #444;
+      color: #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .ctrl-btn {
+      width: 100%;
+      padding: 7px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ccc;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 117, 140, 0.2);
+      color: #fff;
+    }
+
+    .ctrl-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #canvas-wrapper {
+      position: relative;
+      background: transparent;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      will-change: transform;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      display: block;
+      will-change: transform;
+    }
+
+    /* === QR 分享模态框 === */
+    #qr-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 300;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(5, 3, 10, 0.88);
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #qr-modal.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    #qr-modal-box {
+      background: linear-gradient(145deg, rgba(25, 15, 35, 0.98), rgba(15, 10, 25, 0.98));
+      border: 1px solid rgba(255, 182, 193, 0.25);
+      border-radius: 24px;
+      padding: 35px 40px;
+      text-align: center;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 60px rgba(255, 182, 193, 0.1);
+      transform: scale(0.85) translateY(20px);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #qr-modal.show #qr-modal-box {
+      transform: scale(1) translateY(0);
+    }
+
+    #qr-modal-box canvas {
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(255, 182, 193, 0.15);
+    }
+
+    #qr-modal-box h3 {
+      color: #ffb6c1;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      margin: 0 0 4px 0;
+    }
+
+    #qr-modal-box p {
+      color: #c0b0c8;
+      font-size: 0.85rem;
+      margin: 12px 0 4px;
+      letter-spacing: 1px;
+    }
+
+    #qr-close {
+      margin-top: 18px;
+      padding: 9px 35px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s;
+      letter-spacing: 1px;
+    }
+
+    #qr-close:hover {
+      background: rgba(255, 117, 140, 0.2);
+      color: #fff;
+      border-color: rgba(255, 117, 140, 0.3);
+    }
+
+    #qr-url {
+      color: #665577;
+      font-size: 0.7rem;
+      word-break: break-all;
+      margin-top: 8px;
+      padding: 0 10px;
+    }
+
+    /* ═══ 拖拽相册画布 ═══ */
+    .drag-canvas-page {
+      position: fixed; inset: 0; z-index: 100; background: #000;
+      display: none; overflow: hidden; overscroll-behavior: none;
+      touch-action: pan-x pan-y; cursor: grab;
+    }
+    .drag-canvas-page:active { cursor: grabbing; }
+    .dc-particles {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .drag-canvas {
+      position: absolute; left: 0; top: 0; z-index: 1;
+      will-change: transform; user-select: none;
+      transform-origin: 0 0;
+    }
+    .photo-card {
+      position: absolute; width: 260px; z-index: 1;
+      will-change: transform;
+      background: rgba(10,10,10,0.85); border-radius: 8px;
+      padding: 10px; cursor: pointer; transition: z-index 0.1s;
+    }
+    .card-border {
+      position: absolute; inset: 0; border-radius: 8px; padding: 1px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.06) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+    .card-photo { width: 100%; overflow: hidden; border-radius: 4px; background: #111; }
+    .card-photo img { width: 100%; height: auto; display: block; }
+    .card-photo img.is-portrait { width: auto; height: 170px; transform: rotate(90deg); transform-origin: center center; }
+    .card-photo-meta {
+      margin-top: 14px; font-size: 12px; letter-spacing: 3px;
+      text-align: center; white-space: nowrap; display: block;
+      background: linear-gradient(90deg, #0d3b3f 0%, #4a7c80 60%, #a3b899 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .photo-card.is-bloom {
+      z-index: 100 !important;
+      filter: drop-shadow(0 0 12px rgba(74,124,128,0.4)) drop-shadow(0 0 28px rgba(13,59,63,0.3));
+    }
+.photo-card.is-galaxy-core {
+  z-index: 30 !important;
+  filter: drop-shadow(0 0 16px rgba(250,198,247,0.2)) drop-shadow(0 0 40px rgba(13,59,63,0.25));
+}
+.photo-card.is-galaxy-core .card-photo-meta {
+  background: linear-gradient(90deg, #fac6f7 0%, #ff8fd1 60%, #c2d4c8 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-shadow: 0 0 8px rgba(250,198,247,0.4);
+}
+
+    .photo-card.is-bloom .card-photo-meta {
+      background: linear-gradient(90deg, #4a7c80 0%, #a3b899 60%, #c2d4c8 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-shadow: 0 0 6px rgba(74,124,128,0.3);
+    }
+    .dc-vignette {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      opacity: 0; will-change: background;
+    }
+    .drag-canvas-page.is-focusing .photo-card:not(.is-bloom) {
+      filter: brightness(0.15) blur(2px); opacity: 0.3; transition: all 0.45s ease;
+    }
+    .fullscreen-overlay {
+      position: fixed; inset: 0; z-index: 300; overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .fs-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.96); }
+    .fs-layout {
+      position: relative; display: flex; flex-direction: column; align-items: center;
+      padding: 80px 16px 60px; min-height: 100vh; gap: 32px; justify-content: center;
+    }
+    .fs-photo-area { width: 100%; display: flex; justify-content: center; }
+    .fs-flip-card { position: relative; max-width: min(340px, 76vw); text-align: center; }
+      will-change: transform, filter, opacity;
+    .fs-photo-wrap { border-radius: 8px; overflow: hidden; }
+    .fs-photo-wrap img { width: 100%; max-height: 70vh; object-fit: contain; display: block; border-radius: 8px; }
+    .fs-meta {
+      font-size: 16px; letter-spacing: 4px; text-align: center; margin-top: 12px;
+      background: linear-gradient(90deg, #0d3b3f 0%, #4a7c80 60%, #a3b899 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .fs-view-original {
+      position: fixed; bottom: 28px; right: 28px; z-index: 10001;
+      padding: 10px 20px; border-radius: 24px;
+      background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(255,255,255,0.7); font-size: 13px; text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: all 0.25s ease;
+      letter-spacing: 0.5px;
+    }
+    .fs-view-original:hover {
+      background: rgba(255,255,255,0.16); color: #fff;
+      border-color: rgba(255,255,255,0.25);
+    }
+    @media (max-width: 600px) {
+      .fs-view-original { bottom: 16px; right: 16px; padding: 8px 16px; font-size: 12px; }
+    }
+    .fs-story-area {
+      width: 100%; max-width: 540px; flex-shrink: 0; opacity: 0; padding-top: 16px;
+    }
+    .fs-story {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: clamp(13px, 3.5vw, 15px); line-height: 1.9;
+      color: #d0d0d0; letter-spacing: 1.5px; text-align: justify;
+    }
+    .film-grain {
+      position: fixed; inset: 0; z-index: 200; pointer-events: none;
+      opacity: 0.035; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat; background-size: 256px 256px;
+    }
+
+  </style>
+</head>
+
+<body class="bg-deep">
+
+  <div id="start-screen">
+    <div id="start-title">Miracle<span>Heart</span></div>
+    <div id="start-sub">Memory Nebula</div>
+    <div id="start-hint"></div>
+    <button id="btn-start">Enter</button>
+    <img id="start-cover" src="photos/4-cover.jpg" alt="cover" />
+    <div id="start-dots">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div id="main-title">Miracle Heart</div>
+  <button id="toggle-btn">⚙️</button>
+
+  <div id="canvas-wrapper">
+    <div id="canvas-container"></div>
+    <div id="html-overlay">
+      <img id="single-photo-view" src="" alt="Memory" />
+      <div id="wall-view">
+      <div class="drag-canvas-page">
+        <canvas class="dc-particles"></canvas>
+        <div class="dc-vignette"></div>
+        <div class="drag-canvas"></div>
+      </div>
+    </div>
+      <div id="ring-scene">
+        <div id="ring-view"></div>
+      </div>
+    </div>
+    <div id="ui-layer">
+    </div>
+  </div>
+
+  <div id="ui-panel">
+    <div class="ctrl-section">
+      <h3>📝 表白文字自定义</h3>
+      <div class="ctrl-group"><label>标题内容</label><input type="text" id="custom-text" value="Miracle Heart"></div>
+      <div class="ctrl-group"><label>字体大小 <span id="val-font-size">4.5</span>rem</label><input type="range"
+          id="font-size" min="2.0" max="9.0" step="0.5" value="4.5"></div>
+      <div class="ctrl-group">
+        <label>字体</label>
+        <select id="font-family">
+          <option value="'Great Vibes', cursive">Great Vibes (浪漫手写)</option>
+          <option value="'Ma Shan Zheng', cursive">马善政 (毛笔体)</option>
+          <option value="'Long Cang', cursive">龙苍 (灵动草书)</option>
+          <option value="'Noto Sans SC', sans-serif">思源黑体</option>
+        </select>
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <h3>🎨 场景设置</h3>
+      <div class="ctrl-group"><button id="btn-fullscreen" class="ctrl-btn">⛶ 全屏模式</button></div>
+      <div class="ctrl-group"><button id="btn-share-qr" class="ctrl-btn">📱 分享二维码</button></div>
+    </div>
+        <div class="ctrl-section">
+      <h3>🖱️ 场景切换</h3>
+      <div class="ctrl-group"><button id="btn-mode-particle" class="ctrl-btn">🌟 星云粒子模式</button></div>
+      <div class="ctrl-group"><button id="btn-mode-wall" class="ctrl-btn">🖼️ 照片墙</button></div>
+      <div class="ctrl-group"><button id="btn-mode-ring" class="ctrl-btn">💫 环形画廊</button></div>
+    </div>
+<div class="ctrl-section">
+      <h3>🎵 背景音乐</h3>
+      <div class="ctrl-group">
+        <button class="ctrl-btn" onclick="document.getElementById('music-input').click()">📁 上传专属背景音乐 (MP3)</button>
+        <input type="file" id="music-input" accept="audio/*" style="display:none;">
+      </div>
+      <div class="ctrl-row" style="margin-top:6px;">
+        <button id="btn-play-pause" class="ctrl-btn" style="width:40px; flex:none;">▶</button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.6" style="flex:1;">
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <h3>🎛️ 特效微调</h3>
+      <div class="ctrl-group"><label>粒子散聚 <span id="val-blend">100</span>%</label><input type="range" id="blend-factor"
+          min="0" max="100" step="1" value="100"></div>
+      <div class="ctrl-group"><label>自转速度 <span id="val-rot">0.002</span></label><input type="range" id="rot-speed"
+          min="0" max="0.08" step="0.002" value="0.002"></div>
+      <div class="ctrl-group"><label>音乐灵敏度 <span id="val-beat">1.0</span></label><input type="range" id="beat-sense"
+          min="0" max="3.0" step="0.1" value="1.0"></div>
+      <div class="ctrl-group"><label>梦幻辉光强度 <span id="val-bloom">1.0</span></label><input type="range"
+          id="bloom-strength" min="0.0" max="2.0" step="0.1" value="1.0"></div>
+    </div>
+  </div>
+
+  <div id="qr-modal">
+    <div id="qr-modal-box">
+      <h3>✨ Miracle Heart</h3>
+      <canvas id="qr-canvas"></canvas>
+      <p>📱 扫一扫，在手机上打开这份浪漫</p>
+      <div id="qr-url"></div>
+      <button id="qr-close">关 闭</button>
+    </div>
+  </div>
+  <script type="module">
+    import * as THREE from 'https://esm.sh/three@0.160.0';
+    import { EffectComposer } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+    import { RoomEnvironment } from 'https://esm.sh/three@0.160.0/examples/jsm/environments/RoomEnvironment.js';
+    // Gesture recognition removed — using UI controls instead
+    import QRCode from 'https://esm.sh/qrcode@1.5.3';
+    import gsap from 'https://esm.sh/gsap@3.12.5';
+
+    const CONFIG = {
+      goldCount: 1200, silverCount: 800, gemCount: 700, emeraldCount: 550, dustCount: 2400,
+      camDistance: 105, bloomStrength: 1.0, bloomThreshold: 0.2, bloomRadius: 0.7,
+      bloomRes: 0.65, pixelCap: 1.3, baseSphereSegs: 7,
+    };
+const PHOTO_ORIGINALS = {
+  '2door.webp': 'photos_original/2door.jpg',
+  '4-cover.webp': 'photos_original/4-cover.jpg',
+  '4-rotated.webp': 'photos_original/4-rotated.jpg',
+  'BD/kun.webp': 'photos_original/BD/kun.jpg',
+  'card-1.webp': 'photos_original/card-1.png',
+  'card-2.webp': 'photos_original/card-2.jpg',
+  'card-3.webp': 'photos_original/card-3.jpg',
+  'card-4.webp': 'photos_original/card-4.jpg',
+  'index.webp': 'photos_original/index.jpg',
+  '小食杂记/mixue.webp': 'photos_original/小食杂记/mixue.jpg',
+  '小食杂记/蛙.webp': 'photos_original/小食杂记/蛙.jpg',
+  '漫/4.webp': 'photos_original/漫/4.jpg',
+  '漫/kun.webp': 'photos_original/漫/kun.jpg',
+  '漫/me.webp': 'photos_original/漫/me.jpg',
+  '漫/wei.webp': 'photos_original/漫/wei.jpg',
+  '漫/ya.webp': 'photos_original/漫/ya.jpg',
+  '漫/zhu.webp': 'photos_original/漫/zhu.jpg',
+  'super CP/zwyz1.webp': 'photos_original/super CP/zwyz1.jpg',
+  '🎓/毕业照1.webp': 'photos_original/🎓/毕业照1.jpg',
+  '🎓/毕业照2.webp': 'photos_original/🎓/毕业照2.jpg',
+  '🎓/毕业照3.webp': 'photos_original/🎓/毕业照3.jpg',
+  '🎓/毕业照4.webp': 'photos_original/🎓/毕业照4.jpg',
+  '🎓/毕业照5.webp': 'photos_original/🎓/毕业照5.jpg',
+  '🎓/毕业照6.webp': 'photos_original/🎓/毕业照6.jpg',
+  '🎓/毕业照7.webp': 'photos_original/🎓/毕业照7.jpg',
+  '🎓/毕业照8.webp': 'photos_original/🎓/毕业照8.jpg',
+  '🎓/毕业照9.webp': 'photos_original/🎓/毕业照9.jpg',
+  '🎓hb/1.webp': 'photos_original/🎓hb/1.png'
+};
+// 手动指定需要旋转 90° 的照片（填文件名，如 'poriad.webp'）
+const ROTATE_90_PHOTOS = new Set([]);
+
+const PRELOAD_PHOTOS = ['photos/2door.webp', 'photos/BD/kun.webp', 'photos/poriad.webp', 'photos/super CP/zwyz1.webp', 'photos/小食杂记/mixue.webp', 'photos/小食杂记/蛙.webp', 'photos/漫/kun.webp', 'photos/漫/me.webp', 'photos/漫/wei.webp', 'photos/漫/ya.webp', 'photos/漫/zhu.webp', 'photos/🎓/毕业照1.webp', 'photos/🎓/毕业照2.webp', 'photos/🎓/毕业照3.webp', 'photos/🎓/毕业照4.webp', 'photos/🎓/毕业照5.webp', 'photos/🎓/毕业照6.webp', 'photos/🎓/毕业照7.webp', 'photos/🎓/毕业照8.webp', 'photos/🎓/毕业照9.webp', 'photos/🎓hb/1.webp'];
+
+
+
+    const STATE = { PARTICLE: 'particle', WALL: 'wall', RING: 'ring' };
+    let currentState = STATE.PARTICLE;
+
+    // ═══ 状态持久化：刷新后恢复上次浏览位置 ═══
+    function saveAppState() {
+      const state = { s: currentState };
+      if (currentState === STATE.WALL) {
+        state.ox = dcOffsetX; state.oy = dcOffsetY; state.sc = dcScale;
+      }
+      try { localStorage.setItem('epa-state', JSON.stringify(state)); } catch(e) {}
+    }
+    function restoreAppState() {
+      try {
+        const raw = localStorage.getItem('epa-state');
+        if (!raw) return;
+        const st = JSON.parse(raw);
+        if (st.s === STATE.WALL && dcPage) {
+          setTimeout(() => {
+            currentState = STATE.WALL;
+            dcOffsetX = st.ox || 0; dcOffsetY = st.oy || 0; dcScale = st.sc || 1;
+            clampDragCanvas();
+            updateHTMLOverlay();
+            }, 800);
+        }
+      } catch(e) {}
+    }
+    let blendFactor = 1;   // 心形始终可见（无手势控制）
+
+    let scene, camera, renderer, composer, mainGroup = new THREE.Group();
+    let goldMesh, silverMesh, gemMesh, emeraldMesh, dustSystem, starFieldMat;
+    let photoMeshes = [], photoUrls = [], photoParticleCache = [];
+    let logicData = { gold: [], silver: [], gem: [], emerald: [], dust: [], star: null };
+    let bloomPass;
+    const dummy = new THREE.Object3D();
+    const _v = new THREE.Vector3();
+    let time = 0;
+
+    let rotationSpeed = 0.002;
+    let ringCurrentAngle = 0;
+    let frameTimes = [], fpsAvg = 60;
+
+    let audioCtx, analyser, dataArray, audioEl;
+    let beat = 0;
+
+    // ★ 新增：环形画廊漂浮粒子背景
+    let ringParticlesSys = null;
+
+    // ★ 新增：流光粒子尾迹系统
+    let trailSystem = null;
+    const TRAIL_LENGTH = 5;
+
+    // ★ 新增：照片粒子化过渡（Three.js Points）
+
+    // 资源追踪（用于页面卸载时清理）
+    let rAF_main = null;
+
+    (async function autoStart() {
+      initThree();
+      initAudio();
+      setupUI();
+      animate();
+      // 音频上下文延迟恢复：等用户首次交互时自动挂载
+      const resumeAudio = () => {
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().then(() => {
+            document.removeEventListener('click', resumeAudio);
+            document.removeEventListener('touchend', resumeAudio);
+          }).catch(() => {});
+        }
+      };
+      document.addEventListener('click', resumeAudio);
+      document.addEventListener('touchend', resumeAudio);
+      // 恢复上次浏览状态
+      restoreAppState();
+    })();
+
+    function initThree() {
+      const container = document.getElementById('canvas-container');
+      scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x050518, 0.0008); scene.background = new THREE.Color(0x050518); scene.fog.color.setHex(0x050518);
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, CONFIG.camDistance);
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, CONFIG.pixelCap));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.3;
+      container.appendChild(renderer.domElement);
+
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+
+      const sl = new THREE.SpotLight(0xffd700, 150); sl.position.set(40, 90, 50); scene.add(sl);
+      const bl = new THREE.PointLight(0xff758c, 80, 250); bl.position.set(-50, -20, 50); scene.add(bl);
+      const gl = new THREE.PointLight(0xffb6c1, 60, 200); gl.position.set(50, -40, -30); scene.add(gl);
+
+      const renderPass = new RenderPass(scene, camera);
+      const bloomRes = CONFIG.bloomRes;
+      const bw = Math.round(window.innerWidth * bloomRes), bh = Math.round(window.innerHeight * bloomRes);
+      bloomPass = new UnrealBloomPass(new THREE.Vector2(bw, bh), 1.5, 0.4, 0.85);
+      bloomPass.threshold = CONFIG.bloomThreshold; bloomPass.strength = CONFIG.bloomStrength; bloomPass.radius = CONFIG.bloomRadius;
+      composer = new EffectComposer(renderer); composer.addPass(renderPass); composer.addPass(bloomPass);
+
+      createMaterialsAndMeshes(); createDust(); createStarField(); createSnow();
+      createRingParticleSystem(); createTrailSystem();
+      scene.add(mainGroup);
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          const bw = Math.round(window.innerWidth * CONFIG.bloomRes);
+          const bh = Math.round(window.innerHeight * CONFIG.bloomRes);
+          composer.setSize(bw, bh);
+        }, 150); // 防抖：缩放窗口时不做连续重算
+      });
+    }
+
+    function getHeartPoint(t, phi, rR) {
+      const s = Math.sin(t);
+      const s3 = s * s * s;
+      const heartX = 14 * s3;
+      const heartY = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+      return new THREE.Vector3(heartX * Math.cos(phi) * rR * 1.3, (heartY * rR * 1.3) + 4, heartX * Math.sin(phi) * rR * 0.5);
+    }
+
+    function randomSpherePoint(r) {
+      const u = Math.random(), v = Math.random();
+      const theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
+      return new THREE.Vector3(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi));
+    }
+
+    function createMaterialsAndMeshes() {
+      const goldMat = new THREE.MeshPhysicalMaterial({ color: 0xffb6c1, metalness: 0.9, roughness: 0.15, clearcoat: 1.0, emissive: 0xff4466, emissiveIntensity: 0.2 });
+      const silverMat = new THREE.MeshPhysicalMaterial({ color: 0xffd700, metalness: 1.0, roughness: 0.1, clearcoat: 1.0 });
+      const gemMat = new THREE.MeshPhysicalMaterial({ color: 0xff3366, metalness: 0.2, roughness: 0.0, transmission: 0.8, thickness: 1.5, emissive: 0xaa0022, emissiveIntensity: 0.4 });
+      const emeraldMat = new THREE.MeshPhysicalMaterial({ color: 0xfecfef, metalness: 0.5, roughness: 0.1, transmission: 0.5, thickness: 1.2 });
+
+      const segs = CONFIG.baseSphereSegs;
+      goldMesh = createInstancedMesh(new THREE.SphereGeometry(0.55, segs, segs), goldMat, CONFIG.goldCount, logicData.gold);
+      silverMesh = createInstancedMesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), silverMat, CONFIG.silverCount, logicData.silver);
+      gemMesh = createInstancedMesh(new THREE.OctahedronGeometry(0.55, 0), gemMat, CONFIG.gemCount, logicData.gem);
+      emeraldMesh = createInstancedMesh(new THREE.ConeGeometry(0.35, 0.85, 5), emeraldMat, CONFIG.emeraldCount, logicData.emerald);
+
+      const star = new THREE.Mesh(
+        new THREE.OctahedronGeometry(2.8, 0),
+        new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.9, roughness: 0, emissive: 0xffb6c1, emissiveIntensity: 2.0 })
+      );
+      star.userData = { treePos: new THREE.Vector3(0, 21, 0), scatterPos: new THREE.Vector3(0, 60, 0) };
+      star.position.copy(star.userData.treePos); mainGroup.add(star); logicData.star = star;
+    }
+
+    function createInstancedMesh(geo, mat, count, dataArray) {
+      const mesh = new THREE.InstancedMesh(geo, mat, count);
+      mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); mainGroup.add(mesh);
+      for (let i = 0; i < count; i++) {
+        const t = Math.random() * Math.PI * 2;
+        const phi = (Math.random() - 0.5) * Math.PI * 0.6;
+        const rR = 0.88 + 0.12 * Math.random();
+        const treePos = getHeartPoint(t, phi, rR);
+        const scatterPos = randomSpherePoint(40 + Math.random() * 50);
+        dataArray.push({
+          treePos, scatterPos, currentPos: treePos.clone(),
+          scale: 0.6 + Math.random() * 0.7,
+          rotSpeed: { x: Math.random() * 0.02, y: Math.random() * 0.02 },
+          rotation: new THREE.Euler(Math.random() * Math.PI, Math.random() * Math.PI, 0)
+        });
+      }
+      return mesh;
+    }
+
+    function createDust() {
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(CONFIG.dustCount * 3);
+      for (let i = 0; i < CONFIG.dustCount; i++) {
+        const t = Math.random() * Math.PI * 2;
+        const phi = (Math.random() - 0.5) * Math.PI * 0.6;
+        const rR = 0.85 + 0.15 * Math.random();
+        const hp = getHeartPoint(t, phi, rR);
+        pos[i * 3] = hp.x; pos[i * 3 + 1] = hp.y; pos[i * 3 + 2] = hp.z;
+        logicData.dust.push({ treePos: hp.clone(), scatterPos: randomSpherePoint(80), currentPos: hp.clone(), velocity: Math.random() * 0.05 + 0.02 });
+      }
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({ color: 0xffb6c1, size: 0.45, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
+      dustSystem = new THREE.Points(geo, mat); mainGroup.add(dustSystem);
+    }
+
+    function createStarField() {
+      const gradCanvas = document.createElement('canvas');
+      gradCanvas.width = 2; gradCanvas.height = 512;
+      const gctx = gradCanvas.getContext('2d');
+      const grad = gctx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0.0, '#080719'); grad.addColorStop(0.50, '#0d0d24'); grad.addColorStop(1.0, '#03030a');
+      gctx.fillStyle = grad; gctx.fillRect(0, 0, 2, 512);
+
+      const addStars = (count, spread, size, color, opacity) => {
+        const geo = new THREE.BufferGeometry();
+        const p = []; for (let i = 0; i < count; i++) p.push((Math.random() - 0.5) * spread, (Math.random() - 0.5) * spread * 0.6, (Math.random() - 0.5) * spread - 350);
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
+        const mat = new THREE.PointsMaterial({ color, size, transparent: true, opacity, blending: THREE.AdditiveBlending, sizeAttenuation: true, depthWrite: false });
+        scene.add(new THREE.Points(geo, mat)); return mat;
+      };
+      const mat1 = addStars(1800, 1500, 0.6, 0xffc0cb, 0.6);
+      const mat3 = addStars(150, 1200, 2.5, 0xffffff, 0.85);
+      starFieldMat = { mat1, mat3 };
+    }
+
+    function createSnow() {
+      const geo = new THREE.BufferGeometry(); const pos = new Float32Array(1500 * 3);
+      for (let i = 0; i < 1500; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * 400; pos[i * 3 + 1] = Math.random() * 200 - 50; pos[i * 3 + 2] = (Math.random() - 0.5) * 400 - 200;
+      }
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({ color: 0xfff0f5, size: 0.5, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false });
+      window.snowSystem = new THREE.Points(geo, mat); scene.add(window.snowSystem);
+    }
+
+    // ★ 环形画廊漂浮粒子背景
+    function createRingParticleSystem() {
+      const count = 500;
+      const pos = new Float32Array(count * 3);
+      const data = [];
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 150 + Math.random() * 180;
+        pos[i * 3] = Math.cos(angle) * radius;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 120;
+        pos[i * 3 + 2] = Math.sin(angle) * radius * 0.45;
+        data.push({ phase: Math.random() * Math.PI * 2, speed: 0.003 + Math.random() * 0.006, floatOffset: Math.random() * 100 });
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({
+        color: 0xffb6c1, size: 0.5, transparent: true, opacity: 0.35,
+        blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
+      });
+      const points = new THREE.Points(geo, mat);
+      points.visible = false;
+      scene.add(points);
+      ringParticlesSys = { points, data, basePos: new Float32Array(pos) };
+    }
+
+    // ★ 流光粒子尾迹系统（ShaderMaterial 支持逐点透明度和大小）
+    function createTrailSystem() {
+      const total = CONFIG.goldCount * TRAIL_LENGTH;
+      const pos = new Float32Array(total * 3);
+      const alphas = new Float32Array(total);
+      const sizes = new Float32Array(total);
+      for (let i = 0; i < CONFIG.goldCount; i++) {
+        for (let j = 0; j < TRAIL_LENGTH; j++) {
+          const idx = i * TRAIL_LENGTH + j;
+          const t = 1 - j / TRAIL_LENGTH;
+          alphas[idx] = t * t * 0.6;
+          sizes[idx] = 0.15 + t * 0.35;
+        }
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('aAlpha', new THREE.BufferAttribute(alphas, 1));
+      geo.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+      const mat = new THREE.ShaderMaterial({
+        uniforms: { uColor: { value: new THREE.Color(0xffb6c1) } },
+        vertexShader: `
+                    attribute float aAlpha;
+                    attribute float aSize;
+                    varying float vAlpha;
+                    void main() {
+                        vAlpha = aAlpha;
+                        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                        gl_PointSize = aSize * (250.0 / -mvPosition.z);
+                        gl_Position = projectionMatrix * mvPosition;
+                    }
+                `,
+        fragmentShader: `
+                    uniform vec3 uColor;
+                    varying float vAlpha;
+                    void main() {
+                        float d = length(gl_PointCoord - vec2(0.5));
+                        if (d > 0.5) discard;
+                        float strength = 1.0 - smoothstep(0.0, 0.5, d) * 0.4;
+                        gl_FragColor = vec4(uColor, strength * vAlpha);
+                    }
+                `,
+        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      const mesh = new THREE.Points(geo, mat);
+      mainGroup.add(mesh);
+      const trails = Array.from({ length: CONFIG.goldCount }, () =>
+        Array.from({ length: TRAIL_LENGTH }, () => new THREE.Vector3(0, 0, 0))
+      );
+      logicData.goldTrail = trails;
+      trailSystem = { mesh, trailLen: TRAIL_LENGTH, positions: pos };
+    }
+
+    // ★ 照片粒子化过渡 — 星尘飞聚成照片（Canvas 2D 粒子汇聚）
+    // ★ 预采样：上传时提取像素数据（供 Three.js 粒子过渡使用）
+    async function preSamplePhoto(url) {
+      try {
+        const img = await new Promise((resolve, reject) => {
+          const i = new Image(); i.crossOrigin = 'anonymous';
+          i.onload = () => resolve(i); i.onerror = reject; i.src = url;
+        });
+        const sw = 48, sh = 36;
+        const sampler = document.createElement('canvas');
+        sampler.width = sw; sampler.height = sh;
+        const sctx = sampler.getContext('2d');
+        sctx.drawImage(img, 0, 0, sw, sh);
+        const data = sctx.getImageData(0, 0, sw, sh).data;
+        const particles = [];
+        for (let y = 0; y < sh; y++) {
+          for (let x = 0; x < sw; x++) {
+            const idx = (y * sw + x) * 4;
+            if (data[idx + 3] > 30) {
+              particles.push({ nx: x / sw, ny: y / sh, r: data[idx] / 255, g: data[idx + 1] / 255, b: data[idx + 2] / 255 });
+            }
+          }
+        }
+        return particles;
+      } catch { return []; }
+    }
+
+    // ★ 照片粒子化过渡 — Three.js Points 版（GPU加速，与主渲染循环同步，杜绝卡顿）
+
+    async function loadPhotoTexture(path) {
+      const img = await new Promise((resolve, reject) => {
+        const i = new Image();
+        i.onload = () => resolve(i);
+        i.onerror = () => reject(new Error('Failed to load: ' + path));
+        i.src = path;
+      });
+      let sw = img.width, sh = img.height;
+      if (!sw || !sh) { console.warn('loadPhotoTexture: invalid dimensions', path); return null; }
+      const tex = new THREE.Texture(img);
+      tex.needsUpdate = true;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+
+    function addPhotoMeshFromTex(tex, w, h) {
+      // 用预加载好的纹理直接创建网格
+      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, fog: false }));
+      const frame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.15, h + 0.15, 0.05), new THREE.MeshPhysicalMaterial({ color: 0xff758c, roughness: 0.2, metalness: 0.8, clearcoat: 1.0 }));
+      frame.position.z = -0.04; mesh.add(frame);
+
+      const t = Math.random() * Math.PI * 2, phi = (Math.random() - 0.5) * Math.PI * 0.55, rR = 0.9 + 0.1 * Math.random();
+      const h_pos = getHeartPoint(t, phi, rR);
+      mesh.userData = { treePos: h_pos, scatterPos: randomSpherePoint(30) };
+      mesh.position.copy(mesh.userData.treePos); photoMeshes.push(mesh); mainGroup.add(mesh);
+      return mesh;
+    }
+
+    // ================================================================
+    //  动画主循环
+    // ================================================================
+    function animate() {
+      rAF_main = requestAnimationFrame(animate); time += 0.01;
+
+      // 自适应帧率检测（每30帧采样一次）
+      frameTimes.push(performance.now());
+      if (frameTimes.length >= 30) {
+        const elapsed = frameTimes[frameTimes.length - 1] - frameTimes[0];
+        fpsAvg = 30000 / elapsed;
+        frameTimes = frameTimes.slice(-15); // 滑动窗口
+        // 如果帧率持续偏低，使用简化渲染模式
+        if (fpsAvg < 24) { bloomPass.strength = Math.min(bloomPass.strength, CONFIG.bloomStrength * 0.6); }
+      }
+
+      if (analyser) {
+        analyser.getByteFrequencyData(dataArray); let sum = 0;
+        for (let i = 0; i < 15; i++) sum += dataArray[i];
+        const sense = parseFloat(document.getElementById('beat-sense')?.value || 1);
+        beat = (sum / 15 / 255) * sense;
+      }
+
+      if (starFieldMat) {
+        starFieldMat.mat1.opacity = 0.5 + Math.sin(time * 1.5) * 0.15;
+        starFieldMat.mat3.opacity = 0.7 + Math.sin(time * 3.0) * 0.25;
+      }
+
+      const easedBf = 1.0 - Math.pow(1.0 - blendFactor, 3.0);
+
+      let heartPulse = 1.0;
+      if (blendFactor > 0.8) {
+        const pulsePeriod = (time * 3.5) % (Math.PI * 2);
+        let pulseCurve = Math.sin(pulsePeriod);
+        if (pulseCurve > 0) {
+          heartPulse = 1.0 + Math.pow(pulseCurve, 4.0) * 0.04 * blendFactor;
+        }
+      }
+      mainGroup.scale.setScalar(heartPulse * (1.0 + beat * 0.03));
+
+      updateMeshLogic(goldMesh, logicData.gold, easedBf);
+      updateMeshLogic(silverMesh, logicData.silver, easedBf);
+      updateMeshLogic(gemMesh, logicData.gem, easedBf);
+      updateMeshLogic(emeraldMesh, logicData.emerald, easedBf);
+      // ★ 更新流光粒子尾迹
+      if (trailSystem && blendFactor > 0.15) {
+        const trailPos = trailSystem.positions;
+        const goldTrail = logicData.goldTrail;
+        if (goldTrail && goldTrail.length > 0) {
+          for (let i = 0; i < Math.min(logicData.gold.length, CONFIG.goldCount); i++) {
+            const currentPos = logicData.gold[i].currentPos;
+            const trail = goldTrail[i];
+            for (let j = trail.length - 1; j > 0; j--) trail[j].copy(trail[j - 1]);
+            trail[0].copy(currentPos);
+            for (let j = 0; j < trail.length; j++) {
+              const idx = i * trail.length + j;
+              trailPos[idx * 3] = trail[j].x;
+              trailPos[idx * 3 + 1] = trail[j].y;
+              trailPos[idx * 3 + 2] = trail[j].z;
+            }
+          }
+          trailSystem.mesh.geometry.attributes.position.needsUpdate = true;
+          trailSystem.mesh.visible = true;
+        }
+      } else if (trailSystem) {
+        trailSystem.mesh.visible = false;
+      }
+      updateDustLogic(easedBf);
+      updatePhotoLogic(easedBf);
+
+      if (logicData.star) {
+        _v.copy(logicData.star.userData.scatterPos).lerp(logicData.star.userData.treePos, easedBf);
+        logicData.star.position.lerp(_v, 0.04);
+        logicData.star.rotation.y += 0.012 + beat * 0.01;
+      }
+
+      mainGroup.rotation.x = THREE.MathUtils.lerp(mainGroup.rotation.x, Math.sin(time * 0.3) * 0.15, 0.03);
+      mainGroup.rotation.z = THREE.MathUtils.lerp(mainGroup.rotation.z, Math.cos(time * 0.3) * 0.08, 0.03);
+      // blendFactor 低时（粒子散开）保持一定旋转，聚心后达到全速
+      const rotMultiplier = 0.35 + 0.65 * Math.min(1, blendFactor / 0.3);
+      mainGroup.rotation.y += rotationSpeed * rotMultiplier;
+      rotationSpeed = THREE.MathUtils.lerp(rotationSpeed, parseFloat(document.getElementById('rot-speed').value || 0.002), 0.03);
+
+      if (window.snowSystem && fpsAvg > 20) { // 低于20fps时暂停雪花（不影响核心体验）
+        const p = window.snowSystem.geometry.attributes.position.array;
+        const snowFall = 0.12 - beat * 0.05;
+        for (let i = 1, n = p.length; i < n; i += 3) {
+          p[i] -= snowFall;
+          if (p[i] < -50) { p[i] = 150; p[i - 1] = (Math.random() - 0.5) * 400; p[i + 1] = (Math.random() - 0.5) * 400 - 200; }
+        }
+        window.snowSystem.geometry.attributes.position.needsUpdate = true;
+      }
+
+      // ★ 环形画廊漂浮粒子背景更新
+      if (ringParticlesSys) {
+        if (currentState === STATE.RING) {
+          const sys = ringParticlesSys;
+          const pos = sys.points.geometry.attributes.position.array;
+          const base = sys.basePos;
+          for (let i = 0; i < sys.data.length; i++) {
+            const d = sys.data[i];
+            const baseX = base[i * 3], baseZ = base[i * 3 + 2];
+            const baseRadius = Math.sqrt(baseX * baseX + baseZ * baseZ);
+            const angle = d.phase + time * d.speed;
+            const r = baseRadius + Math.sin(time * 0.7 + d.floatOffset) * 15;
+            const floatY = Math.sin(time * 0.5 + d.floatOffset) * 12;
+            pos[i * 3] = Math.cos(angle) * r;
+            pos[i * 3 + 1] = base[i * 3 + 1] + floatY;
+            pos[i * 3 + 2] = Math.sin(angle) * r * 0.5;
+          }
+          sys.points.geometry.attributes.position.needsUpdate = true;
+          sys.points.visible = true;
+        } else {
+          ringParticlesSys.points.visible = false;
+        }
+      }
+
+      // 【核心改进】：环形画廊稳定恒速轴
+      if (currentState === STATE.RING) {
+        const ringView = document.getElementById('ring-view');
+        if (ringView) {
+          // 彻底脱离右手干扰，由纯净时间增量 + 音乐低音律动驱动，永不停歇、极其平稳
+          ringCurrentAngle += 0.004 + beat * 0.003;
+          const imgs = ringView.querySelectorAll('.ring-img');
+          // 根据照片数量动态计算环形半径，避免拥挤或稀疏
+          const numPhotos = imgs.length;
+          const spacing = 210; // 每张照片占弧长(px)
+          const computedRadius = (numPhotos * spacing) / (2 * Math.PI);
+          const maxRadius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
+          const radius = Math.max(180, Math.min(computedRadius, maxRadius));
+          imgs.forEach((img, i) => {
+            const a = (Math.PI * 2 / numPhotos) * i + ringCurrentAngle;
+            const x = Math.cos(a) * radius;
+            const waveY = Math.sin(time * 2.0 + i) * 14;
+            const y = Math.sin(a) * radius * 0.35 + waveY;
+            const depth = Math.sin(a);
+            // 基准缩放：近大远小
+            const baseScale = THREE.MathUtils.lerp(0.75, 1.25, (depth + 1) / 2);
+            // 高斯弹跳：转到正前方(depth≈1)时弹到约2x，离开展开平滑收回
+            const pop = 0.8 * Math.exp(-Math.pow((1 - depth) * 3.5, 2));
+            const scale = baseScale + pop;
+            img.style.transform = `translate3d(${x}px,${y}px,0) scale(${scale})`;
+
+            if (depth > 0.2 && Math.abs(Math.cos(a)) < 0.6) {
+              img.classList.remove('is-background'); img.style.zIndex = 100;
+            } else {
+              img.classList.add('is-background'); img.style.zIndex = Math.floor((depth + 1) * 10);
+            }
+          });
+        }
+      }
+
+      composer.render();
+    }
+
+    function updateMeshLogic(mesh, dataArray, bf) {
+      const sinTime = time * 2;
+      const len = dataArray.length;
+      const yWobble = bf < 0.9 ? 0.01 * (1 - bf) : 0;
+      const lerpRate = 0.06;
+      for (let i = 0; i < len; i++) {
+        const item = dataArray[i];
+        _v.copy(item.scatterPos).lerp(item.treePos, bf);
+        if (yWobble > 0.001) item.currentPos.y += Math.sin(sinTime + i * 0.1) * yWobble;
+        item.currentPos.lerp(_v, lerpRate);
+        item.rotation.x += item.rotSpeed.x; item.rotation.y += item.rotSpeed.y;
+        dummy.position.copy(item.currentPos); dummy.rotation.copy(item.rotation);
+        dummy.scale.setScalar(item.scale); dummy.updateMatrix();
+        mesh.setMatrixAt(i, dummy.matrix);
+      }
+      mesh.instanceMatrix.needsUpdate = true;
+    }
+
+    function updateDustLogic(bf) {
+      const positions = dustSystem.geometry.attributes.position.array;
+      const len = logicData.dust.length;
+      const dustTime = time;
+      const moveScale = bf * 0.25;
+      const spreadScale = bf;
+      for (let i = 0; i < len; i++) {
+        const item = logicData.dust[i];
+        if (bf > 0.1) {
+          item.currentPos.y += item.velocity * moveScale;
+          item.currentPos.x += Math.sin(dustTime + i * 0.1) * 0.03 * spreadScale;
+          if (item.currentPos.y > 22) {
+            const resetPos = getHeartPoint(Math.PI, (Math.random() - 0.5) * Math.PI, 0.2 + 0.8 * Math.random());
+            item.currentPos.copy(resetPos); item.currentPos.y = -15;
+          }
+        }
+        _v.copy(item.scatterPos).lerp(item.treePos, bf);
+        item.currentPos.lerp(_v, 0.04);
+        const i3 = i * 3;
+        positions[i3] = item.currentPos.x; positions[i3 + 1] = item.currentPos.y; positions[i3 + 2] = item.currentPos.z;
+      }
+      dustSystem.geometry.attributes.position.needsUpdate = true;
+    }
+
+    function updatePhotoLogic(bf) {
+      const len = photoMeshes.length;
+      if (!len) return;
+      const photoTime = time;
+      const yOffsetScale = (1 - bf) * 0.02;
+      const targetBase = 2.0, targetRange = 1.5;
+      for (let i = 0; i < len; i++) {
+        const mesh = photoMeshes[i];
+        _v.copy(mesh.userData.scatterPos).lerp(mesh.userData.treePos, bf);
+        if (yOffsetScale > 0.001) mesh.position.y += Math.sin(photoTime + i) * yOffsetScale;
+        mesh.lookAt(camera.position);
+        mesh.position.lerp(_v, 0.08);
+        const targetScale = targetBase + targetRange * (1 - bf);
+        mesh.scale.setScalar(THREE.MathUtils.lerp(mesh.scale.x, targetScale, 0.08));
+      }
+    }
+
+function triggerPhotoFlow() {
+      if (photoUrls.length === 0) return;
+      if (currentState === STATE.PARTICLE) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); }
+      else if (currentState === STATE.WALL) { currentState = STATE.RING; renderRingView(); saveAppState(); }
+      else if (currentState === STATE.RING) { currentState = STATE.WALL; showDragCanvas(); saveAppState(); }
+      updateHTMLOverlay();
+    }
+
+    function updateHTMLOverlay() {
+      const wrapper = document.getElementById('canvas-wrapper');
+      const ringScene = document.getElementById('ring-scene');
+      wrapper.classList.remove('show-zoom', 'show-wall', 'show-ring');
+      if (currentState === STATE.WALL) {
+        wrapper.classList.add('show-wall');
+        ringScene.style.display = 'none';
+      } else if (currentState === STATE.RING) {
+        wrapper.classList.add('show-ring');
+        ringScene.style.display = 'block';
+      } else {
+        ringScene.style.display = 'none';
+      }
+    }
+
+    // ═══ 拖拽相册画布 ═══
+    const CANVAS_W = 1200;
+    const CANVAS_H = 2400;
+    let dcPage, dcCardsWrap, dcVignette, dcBgCanvas, dcCtx;
+    let dcIsDragging = false, dcStartX, dcStartY, dcOffsetX = 0, dcOffsetY = 0;
+    let dcScale = 1;
+    let dcPinchStartDist = 0, dcPinchStartScale = 1, dcPinchMidX = 0, dcPinchMidY = 0;
+    let dcVelX = 0, dcVelY = 0, dcLastTime = 0, dcLastX = 0, dcLastY = 0, dcInertiaRAF = null;
+    let dcFullscreenOpen = false, dcActiveCard = null, dcActiveData = null, dcHideTimeout = null;
+    let dcParticles = [];
+    const DC_PARTICLE_COUNT = 700;
+    let dcBreathTweens = [];
+
+    function initDragCanvas() {
+      dcPage = document.querySelector('.drag-canvas-page');
+      dcCardsWrap = document.querySelector('.drag-canvas');
+      dcVignette = document.querySelector('.dc-vignette');
+      dcBgCanvas = document.querySelector('.dc-particles');
+      dcCtx = dcBgCanvas?.getContext('2d');
+      dcCardsWrap.style.width = CANVAS_W + 'px';
+      dcCardsWrap.style.height = CANVAS_H + 'px';
+      buildPhotoCards();
+      initDCParticles();
+      dcPage.style.display = 'none';
+      if (dcVignette) dcVignette.style.opacity = '0';
+      const initX = -(CANVAS_W - window.innerWidth) / 2;
+      const initY = -(CANVAS_H - window.innerHeight) / 2;
+      dcOffsetX = Math.min(0, initX);
+      dcOffsetY = Math.min(0, initY);
+      clampDragCanvas();
+      // Event listeners — 鼠标拖拽
+      dcCardsWrap.addEventListener('mousedown', dcStartDrag);
+      window.addEventListener('mousemove', dcMoveDrag);
+      window.addEventListener('mouseup', dcEndDrag);
+
+      // 滚轮缩放 — 以鼠标指针位置为中心
+      dcPage.addEventListener('wheel', (e) => {
+        if (dcFullscreenOpen) return;
+        e.preventDefault();
+        const mx = e.clientX, my = e.clientY;
+        const zoomFactor = e.deltaY < 0 ? 1.08 : 0.93;  // ↑放大  ↓缩小
+        const newScale = Math.min(2.0, Math.max(0.4, dcScale * zoomFactor));
+        const ratio = newScale / dcScale;
+        // 保持鼠标下方画面点不动
+        dcOffsetX = mx - ratio * (mx - dcOffsetX);
+        dcOffsetY = my - ratio * (my - dcOffsetY);
+        dcScale = newScale;
+        clampDragCanvas();
+      }, { passive: false });
+
+      // 触屏事件 — 单指拖拽 + 双指 Pinch-to-Zoom
+      dcCardsWrap.addEventListener('touchstart', handleTouchStart, { passive: false });
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchend', handleTouchEnd);
+
+      window.addEventListener('resize', () => { resizeDCParticles(); clampDragCanvas(); });
+      dcPage.addEventListener('click', (e) => {
+        if (e.target.closest('.photo-card') || e.target.closest('.fullscreen-overlay')) return;
+        const now = Date.now();
+        if (now - dcLastTap < 300) hideDragCanvas();
+        dcLastTap = now;
+      });
+    }
+
+    function buildPhotoCards() {
+      initScatterHotspotLayout();
+    }
+
+    // ═══ 错落瀑布布局：照片如水流般层叠而下，手机端紧凑友好 ═══
+    function initScatterHotspotLayout() {
+      dcCardsWrap.innerHTML = '';
+      const total = photoUrls.length;
+      if (total === 0) return;
+
+      const CARD_W = 260;
+      const EST_H = 170;
+      const COLS = 3;
+      const COL_W = 400;                           // 宽松列宽（卡片 ~260 + 间隙 ~140）
+      const LAYOUT_OFFSET_X = (CANVAS_W - COLS * COL_W) / 2;     // 整体居中
+      const GAP_Y_MIN = 14;                       // 纵向最小间距
+      const GAP_Y_MAX = 34;                       // 纵向最大间距（随机化打破机械感）
+
+      // ── 每列的当前 Y 坐标（错落起始，制造瀑布落差）──
+      const colY = [];
+      for (let c = 0; c < COLS; c++) {
+        colY[c] = 60 + Math.random() * 60 + c * 30;  // 渐次下沉
+      }
+
+      // ── 已放置卡片位置（用于碰撞检测）──
+      const placed = [];
+
+      // ── 逐张摆放（始终放入当前 Y 最小的列）──
+      for (let i = 0; i < total; i++) {
+        // 找 Y 最小的列
+        let col = 0;
+        for (let c = 1; c < COLS; c++) {
+          if (colY[c] < colY[col]) col = c;
+        }
+
+        const url = photoUrls[i];
+        const scale = 0.88 + Math.random() * 0.14;     // 0.88~1.02
+        const rot = (Math.random() - 0.5) * 12;         // ±6°
+        const zIdx = total - i + Math.floor(Math.random() * 10);  // 下方照片压上方
+        const w = Math.round(CARD_W * scale);
+
+        // 列中心 ± 横向偏移（交替左右，增强错落感）
+        const colCX = col * COL_W + COL_W / 2;
+        const staggerDir = (i % 2 === 0 ? 1 : -1);
+
+        // 尝试找不重叠的位置（逐次下推，考虑旋转后有效尺寸）
+        const effW = w + 18;  // ±6° 旋转导致对角线外扩
+        const effH = EST_H + 14;
+        let x, y;
+        for (let attempt = 0; attempt < 12; attempt++) {
+          const jitterX = staggerDir * (8 + Math.random() * 20);
+          x = Math.max(20, Math.min(CANVAS_W - w - 20, LAYOUT_OFFSET_X + colCX - w / 2 + jitterX));
+          y = colY[col] + attempt * 16;  // 每次尝试下推 16px
+
+          // 检查与已放置卡片的重叠
+          let tooMuch = false;
+          for (const p of placed) {
+            const ox = Math.max(0, Math.min(x + effW, p.x + p.effW) - Math.max(x, p.x));
+            const oy = Math.max(0, Math.min(y + effH, p.y + p.effH) - Math.max(y, p.y));
+            const overlap = ox * oy;
+            const minArea = Math.min(effW * effH, p.effW * p.effH);
+            if (overlap / minArea > 0.2) { tooMuch = true; break; }
+          }
+          if (!tooMuch) break;
+        }
+
+        // 创建 DOM
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+        card.style.left = x + 'px';
+        card.style.top = y + 'px';
+        card.style.width = w + 'px';
+        card.style.transform = `rotate(${rot}deg)`;
+        card.style.zIndex = zIdx;
+        const fileName = url.split('/').pop();
+        const rotate90 = ROTATE_90_PHOTOS.has(fileName) || ROTATE_90_PHOTOS.has(url);
+        card.innerHTML = `<div class="card-border"></div>
+          <div class="card-photo"><img src="${url}" loading="lazy"${rotate90 ? ' class="is-portrait"' : ''} /></div>
+          <div class="card-photo-meta">${url.split('/').pop().replace(/\.[^.]+$/, '')}</div>`;
+        card.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const origRel = url.replace('photos/', '');
+          openDCFullscreen(card, { photo: url, meta: url.split('/').pop(), story: '时光的碎片，每一帧都是独家记忆。', original: PHOTO_ORIGINALS[origRel] || '' });
+        });
+        card.addEventListener('mouseenter', () => {
+          if (!dcPage.classList.contains('is-focusing')) { card.classList.add('is-bloom'); if (dcVignette) dcVignette.style.opacity = '0.4'; }
+        });
+        card.addEventListener('mouseleave', () => {
+          if (!dcPage.classList.contains('is-focusing')) { card.classList.remove('is-bloom'); if (dcVignette) dcVignette.style.opacity = '0'; }
+        });
+        const t = gsap.to(card, {
+          y: (Math.random() - 0.5) * 14, duration: 3 + Math.random() * 4,
+          repeat: -1, yoyo: true, ease: 'sine.inOut', paused: true,
+        });
+        dcBreathTweens.push(t);
+        dcCardsWrap.appendChild(card);
+
+        // 记录位置 + 推进该列 Y
+        placed.push({ x, y, w, h: EST_H, effW: w + 18, effH: EST_H + 14 });
+        colY[col] = y + EST_H + GAP_Y_MIN + Math.random() * (GAP_Y_MAX - GAP_Y_MIN);
+      }
+    }
+
+    function initDCParticles() {
+      dcParticles = [];
+      for (let i = 0; i < DC_PARTICLE_COUNT; i++) {
+        dcParticles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          r: Math.random() * 1.2 + 0.3,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          opacity: Math.random() * 0.55 + 0.15,
+        });
+      }
+      resizeDCParticles();
+      requestAnimationFrame(animateDCParticles);
+    }
+
+    function resizeDCParticles() {
+      if (!dcBgCanvas) return;
+      dcBgCanvas.width = window.innerWidth;
+      dcBgCanvas.height = window.innerHeight;
+    }
+
+    function animateDCParticles() {
+      if (!dcCtx || dcPage.style.display === 'none') { requestAnimationFrame(animateDCParticles); return; }
+      dcCtx.clearRect(0, 0, dcBgCanvas.width, dcBgCanvas.height);
+      dcParticles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = dcBgCanvas.width;
+        if (p.x > dcBgCanvas.width) p.x = 0;
+        if (p.y < 0) p.y = dcBgCanvas.height;
+        if (p.y > dcBgCanvas.height) p.y = 0;
+        dcCtx.beginPath();
+        dcCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        dcCtx.fillStyle = `rgba(100,160,164,${p.opacity})`;
+        dcCtx.fill();
+      });
+      requestAnimationFrame(animateDCParticles);
+    }
+
+    function clampDragCanvas() {
+      const pw = dcPage.clientWidth || window.innerWidth;
+      const ph = dcPage.clientHeight || window.innerHeight;
+      const visualW = CANVAS_W * dcScale;
+      const visualH = CANVAS_H * dcScale;
+      const minX = Math.min(0, pw - visualW);
+      const maxX = Math.max(0, pw - visualW);
+      const minY = Math.min(0, ph - visualH);
+      const maxY = Math.max(0, ph - visualH);
+      dcOffsetX = Math.min(maxX, Math.max(minX, dcOffsetX));
+      dcOffsetY = Math.min(maxY, Math.max(minY, dcOffsetY));
+      dcCardsWrap.style.transform = `translate3d(${dcOffsetX}px, ${dcOffsetY}px, 0) scale(${dcScale})`;
+    }
+
+    function dcStartDrag(e) {
+      if (dcIsDragging) return;
+      if (dcFullscreenOpen) return;
+      dcIsDragging = true;
+      const t = e.touches ? e.touches[0] : e;
+      dcStartX = t.clientX - dcOffsetX * dcScale;
+      dcStartY = t.clientY - dcOffsetY * dcScale;
+      if (dcInertiaRAF) cancelAnimationFrame(dcInertiaRAF);
+      dcVelX = dcVelY = 0;
+      dcLastX = t.clientX; dcLastY = t.clientY;
+      dcLastTime = performance.now();
+    }
+
+    function dcMoveDrag(e) {
+      if (!dcIsDragging || dcFullscreenOpen) return;
+      if (e.cancelable) e.preventDefault();
+      const t = e.touches ? e.touches[0] : e;
+      const now = performance.now();
+      const dt = Math.max(now - dcLastTime, 1);
+      // 动态阻尼：只作用于惯性速度，拖拽位移保持 1:1 跟手
+      // scale=1 → 1.0  scale=0.4 → 0.4
+      const dragDamping = Math.max(0.35, Math.min(1, dcScale));
+      // 偏移：完美 1:1 跟手，不受阻尼影响
+      dcOffsetX = (t.clientX - dcStartX) / dcScale;
+      dcOffsetY = (t.clientY - dcStartY) / dcScale;
+      // 惯性速度：受阻尼影响，缩小后松手快速刹车
+      dcVelX = (t.clientX - dcLastX) / dt * 16 / dcScale * dragDamping;
+      dcVelY = (t.clientY - dcLastY) / dt * 16 / dcScale * dragDamping;
+      dcLastX = t.clientX; dcLastY = t.clientY; dcLastTime = now;
+      clampDragCanvas();
+    }
+
+    function dcEndDrag() {
+      if (!dcIsDragging || dcFullscreenOpen) return;
+      dcIsDragging = false;
+      if (Math.abs(dcVelX) > 0.5 || Math.abs(dcVelY) > 0.5) dcApplyInertia();
+    }
+
+    function dcApplyInertia() {
+      // 智能摩擦：scale 越小摩擦越大（停得越快），scale 越大越丝滑
+      const friction = 0.84 + 0.11 * Math.min(1, dcScale);
+      function step() {
+        dcVelX *= friction; dcVelY *= friction;
+        dcOffsetX += dcVelX; dcOffsetY += dcVelY;
+        clampDragCanvas();
+        if (Math.abs(dcVelX) > 0.05 || Math.abs(dcVelY) > 0.05) dcInertiaRAF = requestAnimationFrame(step);
+        else dcInertiaRAF = null;
+      }
+      dcInertiaRAF = requestAnimationFrame(step);
+    }
+
+    function openDCFullscreen(card, data) {
+      if (dcFullscreenOpen) return;
+
+      // 暂停被点击卡片的 GSAP 呼吸动画
+      gsap.getTweensOf(card).forEach(t => t.pause());
+
+      dcFullscreenOpen = true; dcActiveCard = card; dcActiveData = data;
+      dcPage.classList.add('is-focusing');
+      card.classList.add('is-bloom');
+      if (dcVignette) dcVignette.style.opacity = '0.6';
+
+      // ===== FLIP First: 获取缩略图在屏幕上的精确位置 =====
+      const thumbImg = card.querySelector('.card-photo img');
+      const startRect = thumbImg.getBoundingClientRect();
+
+      // 创建全屏浮层（初始透明）
+      const overlay = document.createElement('div');
+      overlay.className = 'fullscreen-overlay';
+      overlay.style.opacity = '0';
+      overlay.innerHTML = `<div class="fs-bg"></div>
+        <div class="film-grain"></div>
+        <div class="fs-layout">
+          <div class="fs-photo-area">
+            <div class="fs-flip-card">
+              <div class="fs-photo-wrap"><img src="${data.photo}" alt="" /></div>
+              <div class="fs-meta">${data.meta}</div>
+            </div>
+          </div>
+          <div class="fs-story-area"><div class="fs-story">${data.story}</div></div>
+        </div>
+        ${data.original ? `<a class="fs-view-original" href="${data.original}" target="_blank" title="查看高清原图">🔍 查看原图</a>` : ''}`;
+      document.body.appendChild(overlay);
+
+      // ===== FLIP Last: 等待布局完成，获取全屏元素的自然位置 =====
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const fsCard = overlay.querySelector('.fs-flip-card');
+          const fsMeta = overlay.querySelector('.fs-meta');
+          const fsStory = overlay.querySelector('.fs-story-area');
+
+          const endRect = fsCard.getBoundingClientRect();
+
+          // ===== FLIP Invert: 计算缩略图→全屏的位移 & 缩放 =====
+          const dx = startRect.left - endRect.left;
+          const dy = startRect.top - endRect.top;
+          const sx = startRect.width / endRect.width;
+          const sy = startRect.height / endRect.height;
+
+          // 将全屏卡片置于缩略图位置（不可见时完成，用户无感知）
+          gsap.set(fsCard, {
+            x: dx, y: dy,
+            scaleX: sx, scaleY: sy,
+            transformOrigin: '0 0',
+            filter: 'blur(6px)',
+          });
+
+          // ===== FLIP Play: 建立时间轴 =====
+          const tl = gsap.timeline({ paused: true });
+
+          // ① 遮罩淡入 0.4s
+          tl.to(overlay, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0);
+          // ② 卡片从缩略图位置飞入中央：先快后优雅的 power4.out
+          tl.to(fsCard, {
+            x: 0, y: 0, scaleX: 1, scaleY: 1,
+            duration: 0.65,
+            ease: 'power4.out',
+          }, 0);
+          // ③ 飞行同时模糊退散
+          tl.to(fsCard, { filter: 'blur(0px)', duration: 0.5, ease: 'power2.out' }, 0);
+          // ④ 照片名称错开入场（飞行后半段）
+          tl.fromTo(fsMeta, { opacity: 0, y: 12 }, {
+            opacity: 1, y: 0, duration: 0.3, ease: 'power2.out',
+          }, '-=0.2');
+          // ⑤ 故事文字延迟升起
+          tl.fromTo(fsStory, { opacity: 0, y: 20 }, {
+            opacity: 1, y: 0, duration: 0.45, ease: 'power2.out',
+          }, '-=0.1');
+
+          tl.play();
+        });
+      });
+
+      // 触摸/点击：横滑或点击背景 → 返回照片墙
+      let fsTouchStartX = 0, fsTouchStartY = 0;
+      overlay.addEventListener('touchstart', (e) => {
+        fsTouchStartX = e.touches[0].clientX;
+        fsTouchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      overlay.addEventListener('touchmove', (e) => {
+        const dx = e.touches[0].clientX - fsTouchStartX;
+        const dy = e.touches[0].clientY - fsTouchStartY;
+        // 横向为主时阻止浏览器后退手势
+        if (Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+      overlay.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - fsTouchStartX;
+        const dy = e.changedTouches[0].clientY - fsTouchStartY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          dismissDCFullscreen(overlay);
+        }
+      });
+      overlay.addEventListener('click', (e) => {
+        if (e.target.closest('.fs-photo-wrap') || e.target.closest('.fs-meta')) return;
+        dismissDCFullscreen(overlay);
+      });
+    }
+
+    function dismissDCFullscreen(overlay) {
+      if (!dcFullscreenOpen) return;
+      dcFullscreenOpen = false;
+
+      const card = dcActiveCard;
+
+      // 重新获取缩略图当前屏幕位置（用户可能拖拽过画布！）
+      let startRect = null;
+      if (card) {
+        const thumbImg = card.querySelector('.card-photo img');
+        if (thumbImg) startRect = thumbImg.getBoundingClientRect();
+      }
+
+      const fsCard = overlay.querySelector('.fs-flip-card');
+      const fsMeta = overlay.querySelector('.fs-meta');
+      const fsStory = overlay.querySelector('.fs-story-area');
+      const endRect = fsCard.getBoundingClientRect();
+
+      // 计算反向 FLIP 偏移（卡片→缩略图）
+      const dx = startRect ? (startRect.left - endRect.left) : 0;
+      const dy = startRect ? (startRect.top - endRect.top) : 0;
+      const sx = startRect ? (startRect.width / endRect.width) : 1;
+      const sy = startRect ? (startRect.height / endRect.height) : 1;
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          dcPage.classList.remove('is-focusing');
+          if (card) card.classList.remove('is-bloom');
+          if (dcVignette) dcVignette.style.opacity = '0';
+          overlay.remove();
+          dcActiveCard = null; dcActiveData = null;
+          // 恢复卡片呼吸动画
+          if (card) gsap.getTweensOf(card).forEach(t => t.resume());
+        }
+      });
+
+      // ① 故事文字先行隐退
+      tl.to(fsStory, { opacity: 0, y: 15, duration: 0.18, ease: 'power2.in' }, 0);
+      tl.to(fsMeta, { opacity: 0, y: 10, duration: 0.14, ease: 'power2.in' }, 0);
+      // ② 卡片缩回缩略图位置
+      tl.to(fsCard, {
+        x: dx, y: dy, scaleX: sx, scaleY: sy,
+        duration: 0.45,
+        ease: 'power4.in',
+      }, '-=0.06');
+      // ③ 遮罩渐隐
+      tl.to(overlay, { opacity: 0, duration: 0.3, ease: 'power2.in' }, '-=0.2');
+    }
+
+
+    function fitWallToScreen() {
+      const pw = window.innerWidth;
+      const ph = window.innerHeight;
+      const pad = 0.88;  // 留 12% 边距
+      const sx = (pw * pad) / CANVAS_W;
+      const sy = (ph * pad) / CANVAS_H;
+      dcScale = Math.min(sx, sy, 1);
+      dcOffsetX = (pw - CANVAS_W * dcScale) / 2;
+      dcOffsetY = (ph - CANVAS_H * dcScale) / 2;
+      clampDragCanvas();
+    }
+
+    function showDragCanvas() {
+      if (!dcPage) initDragCanvas();
+      const wrapper = document.getElementById('canvas-wrapper');
+      wrapper.classList.add('show-wall');
+      if (dcHideTimeout) { clearTimeout(dcHideTimeout); dcHideTimeout = null; }
+      dcPage.style.display = 'block';
+      dcPage.style.opacity = '0';
+      document.documentElement.style.overscrollBehaviorX = 'none';
+      // fit-to-screen：自动缩放 + 居中，完整显示所有照片
+      fitWallToScreen();
+      // 移动端地址栏收起/展开时重新适配
+      window.addEventListener('resize', () => {
+        if (dcPage.style.display !== 'none') fitWallToScreen();
+      });
+      dcPage.style.transition = 'opacity 0.4s ease';
+      requestAnimationFrame(() => { dcPage.style.opacity = '1'; });
+      dcBreathTweens.forEach(t => t.play(0));
+      resizeDCParticles();
+    }
+
+    function hideDragCanvas() {
+      if (!dcPage) return;
+      const wrapper = document.getElementById('canvas-wrapper');
+      wrapper.classList.remove('show-wall');
+      dcBreathTweens.forEach(t => t.pause());
+      dcPage.classList.remove('is-focusing');
+      dcActiveCard = null;
+      if (dcVignette) dcVignette.style.opacity = '0';
+      document.documentElement.style.overscrollBehaviorX = '';
+      dcPage.style.opacity = '0';
+      dcPage.style.transition = 'opacity 0.2s ease';
+      dcHideTimeout = setTimeout(() => { dcPage.style.display = 'none'; }, 200);
+      // Remove any fullscreen overlays
+      document.querySelectorAll('.fullscreen-overlay').forEach(o => o.remove());
+      dcFullscreenOpen = false;
+    }
+
+
+    // ═══ 触屏 Pinch-to-Zoom 手势处理 ═══
+    function handleTouchStart(e) {
+      if (e.touches.length === 2) {
+        // 双指按下 → 记录初始距离 & 当前缩放
+        const t = e.touches;
+        const dx = t[0].clientX - t[1].clientX;
+        const dy = t[0].clientY - t[1].clientY;
+        dcPinchStartDist = Math.hypot(dx, dy);
+        dcPinchStartScale = dcScale;
+        dcPinchMidX = (t[0].clientX + t[1].clientX) / 2;
+        dcPinchMidY = (t[0].clientY + t[1].clientY) / 2;
+        dcIsDragging = false;   // 取消正在进行的拖拽
+        if (dcInertiaRAF) cancelAnimationFrame(dcInertiaRAF);
+        dcVelX = dcVelY = 0;
+        return;
+      }
+      dcStartDrag(e);
+    }
+
+    function handleTouchMove(e) {
+      if (e.touches.length === 2 && dcPinchStartDist > 0) {
+        // 双指移动 → 按距离比计算新缩放，以双指中心为锚点
+        e.preventDefault();  // 防止微信/浏览器橡皮筋滚动
+        const t = e.touches;
+        const dx = t[0].clientX - t[1].clientX;
+        const dy = t[0].clientY - t[1].clientY;
+        const dist = Math.hypot(dx, dy);
+        const midX = (t[0].clientX + t[1].clientX) / 2;
+        const midY = (t[0].clientY + t[1].clientY) / 2;
+        if (dcPinchStartDist === 0) return;
+        const newScale = Math.min(2.0, Math.max(0.4, dcPinchStartScale * (dist / dcPinchStartDist)));
+        const ratio = newScale / dcScale;
+        dcOffsetX = midX - ratio * (midX - dcOffsetX);
+        dcOffsetY = midY - ratio * (midY - dcOffsetY);
+        dcScale = newScale;
+        clampDragCanvas();
+        return;
+      }
+      dcMoveDrag(e);
+    }
+
+    function handleTouchEnd(e) {
+      if (e.touches.length < 2) dcPinchStartDist = 0;
+      dcEndDrag();
+    }
+
+    let dcLastTap = 0;
+    // initDragCanvas called on first use (lazy)
+
+    function renderRingView() {
+      const ring = document.getElementById('ring-view'); ring.innerHTML = ''; if (photoUrls.length === 0) return;
+      photoUrls.forEach((url, i) => { const img = document.createElement('img'); img.src = url; img.className = 'ring-img'; ring.appendChild(img); });
+    }
+
+    function updateStatus(msg, color) {
+      document.getElementById('status-msg').innerText = msg;
+      const dot = document.getElementById('status-dot');
+      dot.style.background = color; dot.style.animation = 'none'; dot.offsetHeight; dot.style.animation = 'pulse 2s infinite';
+    }
+
+    function initAudio() {
+      try {
+        audioEl = new Audio(); audioEl.crossOrigin = "anonymous"; audioEl.loop = true;
+        const Actx = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new Actx();
+        analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const source = audioCtx.createMediaElementSource(audioEl);
+        source.connect(analyser); analyser.connect(audioCtx.destination);
+
+      } catch (e) { console.log("Audio init error:", e); }
+    }
+
+function setupUI() {
+      const titleEl = document.getElementById('main-title');
+      document.getElementById('toggle-btn').addEventListener('click', () => document.getElementById('ui-panel').classList.toggle('hidden'));
+
+      document.getElementById('btn-fullscreen').addEventListener('click', () => {
+        if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); document.getElementById('btn-fullscreen').innerText = "❌ 退出全屏"; }
+        else { document.exitFullscreen(); document.getElementById('btn-fullscreen').innerText = "⛶ 全屏模式"; }
+      });
+
+      document.getElementById('custom-text').addEventListener('input', (e) => titleEl.innerText = e.target.value);
+      document.getElementById('font-size').addEventListener('input', (e) => {
+        titleEl.style.fontSize = e.target.value + 'rem'; document.getElementById('val-font-size').innerText = e.target.value;
+      });
+      document.getElementById('font-family').addEventListener('change', (e) => titleEl.style.fontFamily = e.target.value);
+
+      // ★ 粒子散聚滑块
+      document.getElementById('blend-factor').addEventListener('input', (e) => {
+        blendFactor = parseInt(e.target.value) / 100;
+        document.getElementById('val-blend').textContent = e.target.value;
+      });
+
+      document.getElementById('rot-speed').addEventListener('input', (e) => {
+        rotationSpeed = parseFloat(e.target.value); document.getElementById('val-rot').innerText = rotationSpeed.toFixed(3);
+      });
+      document.getElementById('beat-sense').addEventListener('input', (e) => {
+        document.getElementById('val-beat').innerText = parseFloat(e.target.value).toFixed(1);
+      });
+      document.getElementById('bloom-strength').addEventListener('input', (e) => {
+        const v = parseFloat(e.target.value); document.getElementById('val-bloom').innerText = v.toFixed(1);
+        if (bloomPass) bloomPass.strength = v;
+      });
+
+      document.getElementById('music-input').addEventListener('change', (e) => {
+        if (e.target.files[0] && audioEl) {
+          audioEl.src = URL.createObjectURL(e.target.files[0]);
+          audioEl.play().then(() => {
+            document.getElementById('btn-play-pause').innerText = "⏸";
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+          }).catch(err => console.log(err));
+        }
+      });
+
+      document.getElementById('btn-play-pause').addEventListener('click', () => {
+        if (!audioEl) return;
+        if (audioEl.paused) { audioEl.play(); document.getElementById('btn-play-pause').innerText = "⏸"; }
+        else { audioEl.pause(); document.getElementById('btn-play-pause').innerText = "▶"; }
+      });
+
+      document.getElementById('volume-slider').addEventListener('input', (e) => { if (audioEl) audioEl.volume = e.target.value; });
+
+
+      // ★ 模式切换按钮（替代手势交互）
+      document.getElementById('btn-mode-particle').addEventListener('click', () => {
+        if (currentState !== STATE.PARTICLE) {
+          hideDragCanvas();
+          currentState = STATE.PARTICLE;
+          updateHTMLOverlay();
+          saveAppState();
+        }
+      });
+
+      document.getElementById('btn-mode-wall').addEventListener('click', () => {
+        if (photoUrls.length > 0) {
+          currentState = STATE.WALL;
+          showDragCanvas();
+          updateHTMLOverlay();
+          saveAppState();
+        }
+      });
+      document.getElementById('btn-mode-ring').addEventListener('click', () => {
+        if (photoUrls.length > 0) {
+          hideDragCanvas();
+          currentState = STATE.RING;
+          renderRingView();
+          updateHTMLOverlay();
+          saveAppState();
+        } else {
+        }
+      });
+
+      // ★ 分享二维码
+      document.getElementById('btn-share-qr').addEventListener('click', async () => {
+        const modal = document.getElementById('qr-modal');
+        const canvas = document.getElementById('qr-canvas');
+        const urlEl = document.getElementById('qr-url');
+        try {
+          const url = window.location.href;
+          await QRCode.toCanvas(canvas, url, { width: 200, margin: 2, color: { dark: '#ffb6c1', light: '#181225' } });
+          urlEl.textContent = url;
+          modal.classList.add('show');
+        } catch (e) { console.error('QR Code error:', e); }
+      });
+      document.getElementById('qr-close').addEventListener('click', () => {
+        document.getElementById('qr-modal').classList.remove('show');
+      });
+
+      // ★ 自动加载 photos/ 目录下的所有照片
+      async function autoLoadPhotos() {
+        // 先同步推入所有 URL，避免异步间隙期 photoUrls 不完整导致照片墙缺图
+        for (const path of PRELOAD_PHOTOS) photoUrls.push(path);
+        // 再逐张异步加载纹理（用于 3D 粒子场景，不影响照片墙）
+        for (const path of PRELOAD_PHOTOS) {
+          try {
+            // 用 Blob URL 加载纹理，彻底避开 file:// CORS 污染
+            const tex = await loadPhotoTexture(path);
+            if (!tex) continue;
+            // 从纹理的 Image 获取原始尺寸
+            const img = tex.image;
+            let w = 4.8, h = 4.8;
+            if (img.width > img.height) h = 4.8 * (img.height / img.width); else w = 4.8 * (img.width / img.height);
+            addPhotoMeshFromTex(tex, w, h);
+            // 粒子采样（可选）
+            try {
+              if (img.width && img.height) {
+                const sw = 48, sh = 36;
+                const sampler = document.createElement('canvas');
+                sampler.width = sw; sampler.height = sh;
+                const sctx = sampler.getContext('2d');
+                sctx.drawImage(img, 0, 0, sw, sh);
+                const data = sctx.getImageData(0, 0, sw, sh).data;
+                const particles = [];
+                for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {
+                  const idx = (y * sw + x) * 4;
+                  if (data[idx + 3] > 30) particles.push({ nx: x / sw, ny: y / sh, r: data[idx] / 255, g: data[idx + 1] / 255, b: data[idx + 2] / 255 });
+                }
+                photoParticleCache.push(particles);
+              } else {
+                photoParticleCache.push([]);
+              }
+            } catch (e) {
+              photoParticleCache.push([]);
+            }
+            await new Promise(r => setTimeout(r, 0));
+          } catch (err) {
+            console.warn('Failed to load photo:', path, err);
+          }
+        }
+      }
+      autoLoadPhotos();
+    }
+
+    // === 页面卸载时资源清理 ===
+    function cleanupResources() {
+      // 取消动画循环
+      if (rAF_main) { cancelAnimationFrame(rAF_main); rAF_main = null; }
+      // 暂停并释放音频
+      if (audioEl) { audioEl.pause(); audioEl.src = ''; }
+      if (audioCtx && audioCtx.state !== 'closed') audioCtx.close();
+      // 清除流光尾迹
+      if (trailSystem && trailSystem.mesh) { mainGroup.remove(trailSystem.mesh); trailSystem.mesh.geometry.dispose(); trailSystem.mesh.material.dispose(); }
+      // 清除环形画廊粒子
+      if (ringParticlesSys && ringParticlesSys.points) { scene.remove(ringParticlesSys.points); ringParticlesSys.points.geometry.dispose(); ringParticlesSys.points.material.dispose(); }
+      // 释放 Three.js GPU 资源
+      if (renderer) { renderer.dispose(); }
+      // 释放图片 Blob URL
+      photoUrls.forEach(url => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); });
+      photoParticleCache = [];
+      photoUrls = [];
+    }
+    // ═══ 全屏退出后布局恢复 ═══
+    // 浏览器全屏变化时（如iOS Safari边缘滑动退出），
+    // 分多帧多次重算布局，确保 canvas / 照片墙 / 环形画廊完整恢复。
+    function relayoutAll() {
+      // Three.js 画布适配
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      const bw = Math.round(window.innerWidth * CONFIG.bloomRes);
+      const bh = Math.round(window.innerHeight * CONFIG.bloomRes);
+      if (composer) composer.setSize(bw, bh);
+
+      // HTML 叠加层状态恢复
+      updateHTMLOverlay();
+
+      // 根据当前状态恢复对应布局
+      if (currentState === STATE.WALL) {
+        fitWallToScreen();
+        resizeDCParticles();
+      } else if (currentState === STATE.RING) {
+        renderRingView();
+      }
+    }
+
+    function scheduleRelayoutAfterFullscreenChange() {
+      relayoutAll();
+      requestAnimationFrame(() => {
+        relayoutAll();
+        requestAnimationFrame(() => relayoutAll());
+      });
+      setTimeout(() => relayoutAll(), 50);
+      setTimeout(() => relayoutAll(), 150);
+      setTimeout(() => relayoutAll(), 300);
+      setTimeout(() => relayoutAll(), 600);
+      setTimeout(() => relayoutAll(), 1000);
+    }
+
+    document.addEventListener('fullscreenchange', scheduleRelayoutAfterFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', scheduleRelayoutAfterFullscreenChange);
+
+    window.addEventListener('beforeunload', cleanupResources);
+  </script>
+  <script>
+    (function(){
+      let done = false;
+      function go() {
+        if (done) return; done = true;
+        const el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      }
+      document.addEventListener("click", go, {once: true});
+      document.addEventListener("touchend", go, {once: true});
+    })();
+  </script>
+</body>
+</html>
