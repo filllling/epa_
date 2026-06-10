@@ -36,6 +36,31 @@
       background: radial-gradient(circle at top, #0f2027 0%, #203a43 50%, #2c5364 100%);
     }
 
+    /* === 横屏提示（iOS 兼容） === */
+    #rotate-hint {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-align: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    #rotate-hint .rotate-icon {
+      font-size: 48px;
+      animation: rotate-phone 1.5s ease-in-out infinite;
+    }
+    @keyframes rotate-phone {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-90deg); }
+    }
+    #rotate-hint.show { display: flex; }
+
 
 
 
@@ -898,7 +923,12 @@
     </div>
   </div>
 
-  <div id="main-title">MEMORIZE!</div>
+  <!-- iOS 竖屏旋转提示 -->
+  <div id="rotate-hint">
+    <div class="rotate-icon">📱</div>
+    <div style="font-size:18px;letter-spacing:2px;">请旋转手机</div>
+    <div style="font-size:12px;color:#888;">横屏体验更佳</div>
+  </div>  <div id="main-title">MEMORIZE!</div>
   <button id="toggle-btn">☰</button>
 
   <div id="canvas-wrapper">
@@ -1102,6 +1132,10 @@
       initThree();
       initAudio();
       setupUI();
+      // 环形画廊立即展示（不等纹理加载）
+      for (const path of PRELOAD_PHOTOS) photoUrls.push(path);
+      renderRingView();
+      updateHTMLOverlay();
       animate();
       // 音频上下文延迟恢复：等用户首次交互时自动挂载
       const resumeAudio = () => {
@@ -1495,6 +1529,12 @@
         beat = (sum / 15 / 255) * sense;
       }
 
+      // 非粒子模式下隐藏粒子背景（心形粒子/雪花/灰尘），仅保留环形画廊
+      if (mainGroup && window.snowSystem) {
+        const showParticles = (currentState === STATE.PARTICLE);
+        mainGroup.visible = showParticles;
+        window.snowSystem.visible = showParticles;
+      }
       if (starFieldMat) {
         starFieldMat.mat1.opacity = 0.5 + Math.sin(time * 1.5) * 0.15;
         starFieldMat.mat3.opacity = 0.7 + Math.sin(time * 3.0) * 0.25;
@@ -1769,13 +1809,12 @@
         const now = Date.now();
         if (now - dcLastTap < 300) {
           if (currentState === STATE.RING) {
-            // RING 下双击 → 照片墙
             currentState = STATE.WALL;
             showDragCanvas();
             saveAppState();
             updateHTMLOverlay();
           } else {
-            hideDragCanvas();
+            triggerPhotoFlow();
           }
         }
         dcLastTap = now;
@@ -2323,6 +2362,22 @@
       } catch (e) { console.log("Audio init error:", e); }
     }
 
+    // === iOS 横屏兼容：检测竖屏时显示旋转提示 ===
+    function checkOrientation() {
+      const hint = document.getElementById("rotate-hint");
+      if (!hint) return;
+      const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile && isPortrait) {
+        hint.classList.add("show");
+      } else {
+        hint.classList.remove("show");
+      }
+    }
+    checkOrientation();
+    window.addEventListener("orientationchange", () => setTimeout(checkOrientation, 300));
+    window.matchMedia("(orientation: portrait)").addEventListener("change", checkOrientation);
+
     function setupUI() {
       const titleEl = document.getElementById('main-title');
       document.getElementById('toggle-btn').addEventListener('click', () => document.getElementById('ui-panel').classList.toggle('hidden'));
@@ -2398,8 +2453,6 @@
 
       // ★ 自动加载 photos/ 目录下的所有照片
       async function autoLoadPhotos() {
-        // 先同步推入所有 URL，避免异步间隙期 photoUrls 不完整导致照片墙缺图
-        for (const path of PRELOAD_PHOTOS) photoUrls.push(path);
         // 再逐张异步加载纹理（用于 3D 粒子场景，不影响照片墙）
         for (const path of PRELOAD_PHOTOS) {
           try {
@@ -2438,13 +2491,7 @@
           }
         }
       }
-      autoLoadPhotos().then(() => {
-        if (currentState === STATE.RING) {
-          renderRingView();
-          updateHTMLOverlay();
-        }
-      });
-    }
+      autoLoadPhotos();    }
 
     // === 页面卸载时资源清理 ===
     function cleanupResources() {
@@ -2465,19 +2512,6 @@
       photoUrls = [];
     }
     window.addEventListener('beforeunload', cleanupResources);
-  </script>
-  <script>
-    (function () {
-      let done = false;
-      function go() {
-        if (done) return; done = true;
-        const el = document.documentElement;
-        if (el.requestFullscreen) el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-      }
-      document.addEventListener("click", go, { once: true });
-      document.addEventListener("touchend", go, { once: true });
-    })();
   </script>
 
 
